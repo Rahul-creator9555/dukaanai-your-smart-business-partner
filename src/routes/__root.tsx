@@ -82,21 +82,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "theme-color", content: "#ffffff" },
+      { title: "DukaanAI — AI assistant for local retailers" },
+      { name: "description", content: "DukaanAI helps local retailers digitize their stores, manage products, and discover trending items." },
+      { property: "og:title", content: "DukaanAI" },
+      { property: "og:description", content: "AI-powered business assistant for local retailers." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: interFont },
+      { rel: "stylesheet", href: interFont500 },
+      { rel: "stylesheet", href: interFont600 },
+      { rel: "stylesheet", href: manropeFont },
+      { rel: "stylesheet", href: manropeFont700 },
+      { rel: "stylesheet", href: appCss },
     ],
   }),
   shellComponent: RootShell,
@@ -124,8 +125,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <Toaster position="top-center" richColors closeButton />
     </QueryClientProvider>
   );
 }
+
