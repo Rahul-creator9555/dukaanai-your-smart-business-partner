@@ -1,14 +1,23 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Package, Sparkles, TrendingUp, Upload, LogOut } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import {
+  AlertTriangle,
+  ArrowRight,
+  Bell,
+  Boxes,
+  Clock,
+  Package,
+  PackagePlus,
+  Plus,
+  Sparkles,
+  TrendingUp,
+} from "lucide-react";
 import { MobileShell } from "@/components/MobileShell";
-import { BrandMark } from "@/components/BrandMark";
+import { BottomNav } from "@/components/BottomNav";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — DukaanAI" }] }),
+  head: () => ({ meta: [{ title: "Home — DukaanAI" }] }),
   component: Dashboard,
 });
 
@@ -16,6 +25,56 @@ interface Profile {
   full_name: string | null;
   shop_name: string | null;
   shop_category: string | null;
+}
+
+const STATS = [
+  {
+    label: "Total Products",
+    value: "128",
+    delta: "+4 this week",
+    icon: Package,
+    tone: "primary" as const,
+  },
+  {
+    label: "Trending",
+    value: "12",
+    delta: "Hot in your area",
+    icon: TrendingUp,
+    tone: "accent" as const,
+  },
+  {
+    label: "Inventory Alerts",
+    value: "3",
+    delta: "Low stock",
+    icon: AlertTriangle,
+    tone: "warn" as const,
+  },
+];
+
+const QUICK_ACTIONS = [
+  { label: "Add Product", icon: PackagePlus, to: "/inventory" as const },
+  { label: "Inventory", icon: Boxes, to: "/inventory" as const },
+  { label: "Trending", icon: TrendingUp, to: "/trends" as const },
+  { label: "AI Assistant", icon: Sparkles, to: "/assistant" as const },
+];
+
+const ACTIVITY = [
+  { title: "Added 'Dove Soap 100g' to inventory", time: "2h ago", icon: PackagePlus },
+  { title: "Low stock alert: Parle-G biscuits", time: "5h ago", icon: AlertTriangle },
+  { title: "Trend spotted: Cold-pressed juice", time: "Yesterday", icon: TrendingUp },
+];
+
+function greeting() {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+}
+
+function initials(name?: string | null, fallback = "DA") {
+  if (!name) return fallback;
+  const parts = name.trim().split(/\s+/).slice(0, 2);
+  return parts.map((p) => p[0]?.toUpperCase()).join("") || fallback;
 }
 
 function Dashboard() {
@@ -34,70 +93,183 @@ function Dashboard() {
     });
   }, []);
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    toast.success("Signed out");
-    navigate({ to: "/auth", replace: true });
-  };
-
   return (
     <MobileShell>
-      <div className="flex items-center justify-between">
-        <BrandMark size="sm" />
-        <button onClick={signOut}
-          className="grid h-10 w-10 place-items-center rounded-full bg-secondary text-secondary-foreground hover:bg-accent"
-          aria-label="Sign out">
-          <LogOut className="h-4 w-4" />
-        </button>
-      </div>
+      {/* Header */}
+      <header className="flex items-center justify-between animate-fade-in">
+        <div className="min-w-0">
+          <p className="text-sm text-muted-foreground">
+            {greeting()},{" "}
+            <span className="font-medium text-foreground">
+              {profile?.full_name?.split(" ")[0] ?? "there"}
+            </span>
+          </p>
+          <h1 className="mt-0.5 truncate text-xl font-bold tracking-tight">
+            {profile?.shop_name ?? "Your shop"}
+          </h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            aria-label="Notifications"
+            className="relative grid h-10 w-10 place-items-center rounded-full bg-secondary text-secondary-foreground transition-colors hover:bg-accent"
+          >
+            <Bell className="h-4 w-4" />
+            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card" />
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/profile" })}
+            aria-label="Profile"
+            className="grid h-10 w-10 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground shadow-elevation-1 transition-transform hover:scale-105"
+          >
+            {initials(profile?.full_name ?? profile?.shop_name)}
+          </button>
+        </div>
+      </header>
 
-      <div className="mt-6">
-        <p className="text-sm text-muted-foreground">Welcome back,</p>
-        <h1 className="mt-1 text-2xl font-bold tracking-tight">
-          {profile?.shop_name ?? "Your shop"}
-        </h1>
-        {profile?.shop_category && (
-          <span className="mt-2 inline-block rounded-full bg-primary-container px-3 py-1 text-xs font-medium text-on-primary-container">
-            {profile.shop_category}
-          </span>
-        )}
-      </div>
+      {/* AI hero */}
+      <section className="mt-5 overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-[oklch(0.40_0.18_265)] p-5 text-primary-foreground shadow-elevation-3 animate-fade-in">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium backdrop-blur">
+              <Sparkles className="h-3 w-3" /> AI Assistant
+            </span>
+            <h2 className="mt-3 text-base font-semibold leading-snug">
+              Get product ideas trending near you
+            </h2>
+            <p className="mt-1 text-xs text-primary-foreground/85">
+              Tap to ask DukaanAI anything about your shop.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/assistant" })}
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/15 text-primary-foreground transition-all hover:bg-white/25 hover:scale-105"
+            aria-label="Open assistant"
+          >
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
+      </section>
 
-      <div className="mt-8 rounded-3xl bg-gradient-to-br from-primary to-[oklch(0.40_0.18_265)] p-6 text-primary-foreground shadow-elevation-3">
-        <Sparkles className="h-6 w-6" />
-        <h2 className="mt-3 text-lg font-semibold">Your AI assistant is on the way</h2>
-        <p className="mt-1 text-sm text-primary-foreground/85">
-          We're getting your store ready. Soon you'll add products, spot trends, and publish online — all with AI.
-        </p>
-      </div>
+      {/* Quick stats */}
+      <section className="mt-6">
+        <SectionTitle>Quick stats</SectionTitle>
+        <div className="mt-3 -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {STATS.map((s) => (
+            <StatCard key={s.label} {...s} />
+          ))}
+        </div>
+      </section>
 
-      <div className="mt-6 grid grid-cols-2 gap-3">
-        <FeatureCard icon={<Package className="h-5 w-5" />} title="Products" desc="Manage your catalog" />
-        <FeatureCard icon={<TrendingUp className="h-5 w-5" />} title="Trends" desc="Discover hot items" />
-        <FeatureCard icon={<Upload className="h-5 w-5" />} title="Publish" desc="Go online with AI" />
-        <FeatureCard icon={<Sparkles className="h-5 w-5" />} title="Assistant" desc="Ask anything" />
-      </div>
+      {/* Quick actions */}
+      <section className="mt-6">
+        <SectionTitle>Quick actions</SectionTitle>
+        <div className="mt-3 grid grid-cols-4 gap-3">
+          {QUICK_ACTIONS.map((a) => (
+            <button
+              key={a.label}
+              type="button"
+              onClick={() => navigate({ to: a.to })}
+              className="group flex flex-col items-center gap-2 rounded-2xl border border-border bg-card p-3 text-center shadow-elevation-1 transition-all hover:-translate-y-0.5 hover:shadow-elevation-2"
+            >
+              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-primary-container text-on-primary-container transition-transform group-hover:scale-105">
+                <a.icon className="h-5 w-5" />
+              </span>
+              <span className="text-[11px] font-medium leading-tight text-foreground">
+                {a.label}
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
 
-      <div className="mt-auto pt-8">
-        <Button variant="outline" size="lg"
-          onClick={() => navigate({ to: "/onboarding" })}
-          className="h-12 w-full rounded-2xl">
-          Edit shop details
-        </Button>
-      </div>
+      {/* Recent activity */}
+      <section className="mt-6">
+        <div className="flex items-center justify-between">
+          <SectionTitle>Recent activity</SectionTitle>
+          <button className="text-xs font-medium text-primary hover:underline">
+            View all
+          </button>
+        </div>
+        <div className="mt-3 divide-y divide-border rounded-2xl border border-border bg-card shadow-elevation-1">
+          {ACTIVITY.map((item) => (
+            <div
+              key={item.title}
+              className="flex items-center gap-3 p-3.5 transition-colors hover:bg-secondary/50"
+            >
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary-container text-on-primary-container">
+                <item.icon className="h-4 w-4" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-foreground">
+                  {item.title}
+                </p>
+                <p className="mt-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">
+                  <Clock className="h-3 w-3" />
+                  {item.time}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Floating add */}
+      <button
+        type="button"
+        onClick={() => navigate({ to: "/inventory" })}
+        aria-label="Add product"
+        className="fixed bottom-24 right-[max(1.25rem,calc(50vw-13rem))] z-30 grid h-14 w-14 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-elevation-3 transition-transform hover:scale-105 active:scale-95 sm:bottom-28"
+      >
+        <Plus className="h-6 w-6" strokeWidth={2.6} />
+      </button>
+
+      <BottomNav />
     </MobileShell>
   );
 }
 
-function FeatureCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
+function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-4 shadow-elevation-1 transition-shadow hover:shadow-elevation-2">
-      <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary-container text-on-primary-container">
-        {icon}
+    <h2 className="text-sm font-semibold tracking-tight text-foreground">
+      {children}
+    </h2>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  delta,
+  icon: Icon,
+  tone,
+}: {
+  label: string;
+  value: string;
+  delta: string;
+  icon: typeof Package;
+  tone: "primary" | "accent" | "warn";
+}) {
+  const toneCls =
+    tone === "warn"
+      ? "bg-destructive/10 text-destructive"
+      : tone === "accent"
+        ? "bg-accent text-accent-foreground"
+        : "bg-primary-container text-on-primary-container";
+  return (
+    <div className="group min-w-[10.5rem] flex-1 snap-start rounded-2xl border border-border bg-card p-4 shadow-elevation-1 transition-all hover:-translate-y-0.5 hover:shadow-elevation-2">
+      <div className="flex items-center justify-between">
+        <span className={`grid h-9 w-9 place-items-center rounded-xl ${toneCls}`}>
+          <Icon className="h-4 w-4" />
+        </span>
       </div>
-      <h3 className="mt-3 text-sm font-semibold text-foreground">{title}</h3>
-      <p className="mt-0.5 text-xs text-muted-foreground">{desc}</p>
-      <span className="mt-2 inline-block text-[10px] font-medium uppercase tracking-wider text-primary">Coming soon</span>
+      <p className="mt-3 text-2xl font-bold tracking-tight text-foreground">
+        {value}
+      </p>
+      <p className="mt-0.5 text-xs font-medium text-foreground">{label}</p>
+      <p className="mt-1 text-[11px] text-muted-foreground">{delta}</p>
     </div>
   );
 }
