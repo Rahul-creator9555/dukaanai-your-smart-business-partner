@@ -10,7 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import interFont from "@fontsource/inter/index.css?url";
+import interFont from "@fontsource/inter/400.css?url";
 import interFont500 from "@fontsource/inter/500.css?url";
 import interFont600 from "@fontsource/inter/600.css?url";
 import manropeFont from "@fontsource/manrope/600.css?url";
