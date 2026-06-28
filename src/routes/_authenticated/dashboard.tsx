@@ -52,7 +52,7 @@ const STATS = [
 ];
 
 const QUICK_ACTIONS = [
-  { label: "Add Product", icon: PackagePlus, to: "/inventory" as const },
+  { label: "Add Product", icon: PackagePlus, to: "/products/new" as const },
   { label: "Inventory", icon: Boxes, to: "/inventory" as const },
   { label: "Trending", icon: TrendingUp, to: "/trends" as const },
   { label: "AI Assistant", icon: Sparkles, to: "/assistant" as const },
@@ -219,7 +219,7 @@ function Dashboard() {
       {/* Floating add */}
       <button
         type="button"
-        onClick={() => navigate({ to: "/inventory" })}
+        onClick={() => navigate({ to: "/products/new" })}
         aria-label="Add product"
         className="fixed bottom-24 right-[max(1.25rem,calc(50vw-13rem))] z-30 grid h-14 w-14 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-elevation-3 transition-transform hover:scale-105 active:scale-95 sm:bottom-28"
       >
