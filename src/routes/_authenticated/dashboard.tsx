@@ -52,7 +52,7 @@ const STATS = [
 ];
 
 const QUICK_ACTIONS = [
-  { label: "Add Product", icon: PackagePlus, to: "/inventory" as const },
+  { label: "Add Product", icon: PackagePlus, to: "/products/new" as const },
   { label: "Inventory", icon: Boxes, to: "/inventory" as const },
   { label: "Trending", icon: TrendingUp, to: "/trends" as const },
   { label: "AI Assistant", icon: Sparkles, to: "/assistant" as const },
