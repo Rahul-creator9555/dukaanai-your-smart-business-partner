@@ -2,16 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {
-  ArrowLeft,
-  Camera,
-  ImagePlus,
-  Loader2,
-  Sparkles,
-  Trash2,
-  Wand2,
-  X,
-} from "lucide-react";
+import { ArrowLeft, ImagePlus, Loader2, Sparkles, Wand2, X } from "lucide-react";
 import { MobileShell } from "@/components/MobileShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
