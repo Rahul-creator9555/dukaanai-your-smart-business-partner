@@ -63,10 +63,7 @@ function TrendsPage() {
     if (action === "ignored") toast(`Ignored "${p.name}"`);
     if (action === "added") {
       toast.success("Opening add product…");
-      navigate({
-        to: "/products/new",
-        search: { name: p.name, category: p.category, price: p.estimatedProfit * 4 } as never,
-      });
+      navigate({ to: "/products/new" });
     }
   }
 
