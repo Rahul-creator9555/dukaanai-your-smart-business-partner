@@ -21,6 +21,7 @@ import { Route as AuthenticatedInventoryRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
 import { Route as AuthenticatedProductsNewRouteImport } from './routes/_authenticated/products.new'
+import { Route as AuthenticatedProductsGenerateRouteImport } from './routes/_authenticated/products.generate'
 import { Route as AuthenticatedProductsProductIdRouteImport } from './routes/_authenticated/products.$productId'
 import { Route as AuthenticatedProductsProductIdEditRouteImport } from './routes/_authenticated/products.$productId.edit'
 
@@ -84,6 +85,12 @@ const AuthenticatedProductsNewRoute =
     path: '/products/new',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedProductsGenerateRoute =
+  AuthenticatedProductsGenerateRouteImport.update({
+    id: '/products/generate',
+    path: '/products/generate',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedProductsProductIdRoute =
   AuthenticatedProductsProductIdRouteImport.update({
     id: '/products/$productId',
@@ -109,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/trends': typeof AuthenticatedTrendsRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRouteWithChildren
+  '/products/generate': typeof AuthenticatedProductsGenerateRoute
   '/products/new': typeof AuthenticatedProductsNewRoute
   '/products/$productId/edit': typeof AuthenticatedProductsProductIdEditRoute
 }
@@ -124,6 +132,7 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/trends': typeof AuthenticatedTrendsRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRouteWithChildren
+  '/products/generate': typeof AuthenticatedProductsGenerateRoute
   '/products/new': typeof AuthenticatedProductsNewRoute
   '/products/$productId/edit': typeof AuthenticatedProductsProductIdEditRoute
 }
@@ -141,6 +150,7 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/trends': typeof AuthenticatedTrendsRoute
   '/_authenticated/products/$productId': typeof AuthenticatedProductsProductIdRouteWithChildren
+  '/_authenticated/products/generate': typeof AuthenticatedProductsGenerateRoute
   '/_authenticated/products/new': typeof AuthenticatedProductsNewRoute
   '/_authenticated/products/$productId/edit': typeof AuthenticatedProductsProductIdEditRoute
 }
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/trends'
     | '/products/$productId'
+    | '/products/generate'
     | '/products/new'
     | '/products/$productId/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/trends'
     | '/products/$productId'
+    | '/products/generate'
     | '/products/new'
     | '/products/$productId/edit'
   id:
@@ -189,6 +201,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/trends'
     | '/_authenticated/products/$productId'
+    | '/_authenticated/products/generate'
     | '/_authenticated/products/new'
     | '/_authenticated/products/$productId/edit'
   fileRoutesById: FileRoutesById
@@ -287,6 +300,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProductsNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/products/generate': {
+      id: '/_authenticated/products/generate'
+      path: '/products/generate'
+      fullPath: '/products/generate'
+      preLoaderRoute: typeof AuthenticatedProductsGenerateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/products/$productId': {
       id: '/_authenticated/products/$productId'
       path: '/products/$productId'
@@ -327,6 +347,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedTrendsRoute: typeof AuthenticatedTrendsRoute
   AuthenticatedProductsProductIdRoute: typeof AuthenticatedProductsProductIdRouteWithChildren
+  AuthenticatedProductsGenerateRoute: typeof AuthenticatedProductsGenerateRoute
   AuthenticatedProductsNewRoute: typeof AuthenticatedProductsNewRoute
 }
 
@@ -339,6 +360,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTrendsRoute: AuthenticatedTrendsRoute,
   AuthenticatedProductsProductIdRoute:
     AuthenticatedProductsProductIdRouteWithChildren,
+  AuthenticatedProductsGenerateRoute: AuthenticatedProductsGenerateRoute,
   AuthenticatedProductsNewRoute: AuthenticatedProductsNewRoute,
 }
 
