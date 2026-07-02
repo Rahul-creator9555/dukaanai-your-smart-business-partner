@@ -23,6 +23,7 @@ import { Route as AuthenticatedAssistantRouteImport } from './routes/_authentica
 import { Route as AuthenticatedProductsNewRouteImport } from './routes/_authenticated/products.new'
 import { Route as AuthenticatedProductsGenerateRouteImport } from './routes/_authenticated/products.generate'
 import { Route as AuthenticatedProductsProductIdRouteImport } from './routes/_authenticated/products.$productId'
+import { Route as AuthenticatedAssistantThreadIdRouteImport } from './routes/_authenticated/assistant.$threadId'
 import { Route as AuthenticatedProductsProductIdEditRouteImport } from './routes/_authenticated/products.$productId.edit'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -97,6 +98,12 @@ const AuthenticatedProductsProductIdRoute =
     path: '/products/$productId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAssistantThreadIdRoute =
+  AuthenticatedAssistantThreadIdRouteImport.update({
+    id: '/$threadId',
+    path: '/$threadId',
+    getParentRoute: () => AuthenticatedAssistantRoute,
+  } as any)
 const AuthenticatedProductsProductIdEditRoute =
   AuthenticatedProductsProductIdEditRouteImport.update({
     id: '/edit',
@@ -109,12 +116,13 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/assistant': typeof AuthenticatedAssistantRoute
+  '/assistant': typeof AuthenticatedAssistantRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/inventory': typeof AuthenticatedInventoryRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/trends': typeof AuthenticatedTrendsRoute
+  '/assistant/$threadId': typeof AuthenticatedAssistantThreadIdRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRouteWithChildren
   '/products/generate': typeof AuthenticatedProductsGenerateRoute
   '/products/new': typeof AuthenticatedProductsNewRoute
@@ -125,12 +133,13 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/assistant': typeof AuthenticatedAssistantRoute
+  '/assistant': typeof AuthenticatedAssistantRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/inventory': typeof AuthenticatedInventoryRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/trends': typeof AuthenticatedTrendsRoute
+  '/assistant/$threadId': typeof AuthenticatedAssistantThreadIdRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRouteWithChildren
   '/products/generate': typeof AuthenticatedProductsGenerateRoute
   '/products/new': typeof AuthenticatedProductsNewRoute
@@ -143,12 +152,13 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
+  '/_authenticated/assistant': typeof AuthenticatedAssistantRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/inventory': typeof AuthenticatedInventoryRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/trends': typeof AuthenticatedTrendsRoute
+  '/_authenticated/assistant/$threadId': typeof AuthenticatedAssistantThreadIdRoute
   '/_authenticated/products/$productId': typeof AuthenticatedProductsProductIdRouteWithChildren
   '/_authenticated/products/generate': typeof AuthenticatedProductsGenerateRoute
   '/_authenticated/products/new': typeof AuthenticatedProductsNewRoute
@@ -167,6 +177,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/profile'
     | '/trends'
+    | '/assistant/$threadId'
     | '/products/$productId'
     | '/products/generate'
     | '/products/new'
@@ -183,6 +194,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/profile'
     | '/trends'
+    | '/assistant/$threadId'
     | '/products/$productId'
     | '/products/generate'
     | '/products/new'
@@ -200,6 +212,7 @@ export interface FileRouteTypes {
     | '/_authenticated/onboarding'
     | '/_authenticated/profile'
     | '/_authenticated/trends'
+    | '/_authenticated/assistant/$threadId'
     | '/_authenticated/products/$productId'
     | '/_authenticated/products/generate'
     | '/_authenticated/products/new'
@@ -314,6 +327,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProductsProductIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/assistant/$threadId': {
+      id: '/_authenticated/assistant/$threadId'
+      path: '/$threadId'
+      fullPath: '/assistant/$threadId'
+      preLoaderRoute: typeof AuthenticatedAssistantThreadIdRouteImport
+      parentRoute: typeof AuthenticatedAssistantRoute
+    }
     '/_authenticated/products/$productId/edit': {
       id: '/_authenticated/products/$productId/edit'
       path: '/edit'
@@ -323,6 +343,20 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedAssistantRouteChildren {
+  AuthenticatedAssistantThreadIdRoute: typeof AuthenticatedAssistantThreadIdRoute
+}
+
+const AuthenticatedAssistantRouteChildren: AuthenticatedAssistantRouteChildren =
+  {
+    AuthenticatedAssistantThreadIdRoute: AuthenticatedAssistantThreadIdRoute,
+  }
+
+const AuthenticatedAssistantRouteWithChildren =
+  AuthenticatedAssistantRoute._addFileChildren(
+    AuthenticatedAssistantRouteChildren,
+  )
 
 interface AuthenticatedProductsProductIdRouteChildren {
   AuthenticatedProductsProductIdEditRoute: typeof AuthenticatedProductsProductIdEditRoute
@@ -340,7 +374,7 @@ const AuthenticatedProductsProductIdRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
+  AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedInventoryRoute: typeof AuthenticatedInventoryRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
@@ -352,7 +386,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
+  AuthenticatedAssistantRoute: AuthenticatedAssistantRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedInventoryRoute: AuthenticatedInventoryRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
