@@ -88,6 +88,7 @@ export function ProductForm({ mode, initial }: Props) {
         purchase_price: Number(purchase || 0),
         selling_price: Number(selling || 0),
         low_stock_threshold: Number(lowStock || 0),
+        expiry_date: expiry || undefined,
       });
       if (!parsed.success) {
         throw new Error(parsed.error.issues[0]?.message ?? "Invalid data");
