@@ -34,6 +34,7 @@ const schema = z.object({
   purchase_price: z.number().min(0).max(10_000_000),
   selling_price: z.number().min(0).max(10_000_000),
   low_stock_threshold: z.number().int().min(0).max(1_000_000),
+  expiry_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
 });
 
 export function ProductForm({ mode, initial }: Props) {
