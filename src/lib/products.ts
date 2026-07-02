@@ -78,3 +78,64 @@ export function formatCurrency(value: number | string | null | undefined): strin
     maximumFractionDigits: 0,
   }).format(Number.isFinite(n) ? n : 0);
 }
+
+export type StockStatus = "out" | "low" | "expiring" | "expired" | "ok";
+
+export function daysUntil(dateStr: string | null | undefined): number | null {
+  if (!dateStr) return null;
+  const d = new Date(dateStr + "T00:00:00");
+  if (Number.isNaN(d.getTime())) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return Math.round((d.getTime() - today.getTime()) / 86400000);
+}
+
+export function getStockStatus(p: Product, expiringWindowDays = 30): StockStatus {
+  if (p.stock_quantity <= 0) return "out";
+  const d = daysUntil(p.expiry_date);
+  if (d !== null && d < 0) return "expired";
+  if (d !== null && d <= expiringWindowDays) return "expiring";
+  if (p.stock_quantity <= p.low_stock_threshold) return "low";
+  return "ok";
+}
+
+export interface InventoryStats {
+  totalSkus: number;
+  totalUnits: number;
+  inventoryValue: number;
+  potentialRevenue: number;
+  lowCount: number;
+  outCount: number;
+  expiringCount: number;
+  expiredCount: number;
+}
+
+export function computeInventoryStats(products: Product[]): InventoryStats {
+  let totalUnits = 0;
+  let inventoryValue = 0;
+  let potentialRevenue = 0;
+  let lowCount = 0;
+  let outCount = 0;
+  let expiringCount = 0;
+  let expiredCount = 0;
+  for (const p of products) {
+    totalUnits += p.stock_quantity;
+    inventoryValue += Number(p.purchase_price) * p.stock_quantity;
+    potentialRevenue += Number(p.selling_price) * p.stock_quantity;
+    const s = getStockStatus(p);
+    if (s === "out") outCount++;
+    else if (s === "low") lowCount++;
+    else if (s === "expiring") expiringCount++;
+    else if (s === "expired") expiredCount++;
+  }
+  return {
+    totalSkus: products.length,
+    totalUnits,
+    inventoryValue,
+    potentialRevenue,
+    lowCount,
+    outCount,
+    expiringCount,
+    expiredCount,
+  };
+}

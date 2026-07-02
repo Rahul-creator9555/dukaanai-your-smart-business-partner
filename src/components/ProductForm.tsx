@@ -34,6 +34,7 @@ const schema = z.object({
   purchase_price: z.number().min(0).max(10_000_000),
   selling_price: z.number().min(0).max(10_000_000),
   low_stock_threshold: z.number().int().min(0).max(1_000_000),
+  expiry_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
 });
 
 export function ProductForm({ mode, initial }: Props) {
@@ -48,6 +49,7 @@ export function ProductForm({ mode, initial }: Props) {
   const [purchase, setPurchase] = useState(String(initial?.purchase_price ?? ""));
   const [selling, setSelling] = useState(String(initial?.selling_price ?? ""));
   const [lowStock, setLowStock] = useState(String(initial?.low_stock_threshold ?? 5));
+  const [expiry, setExpiry] = useState(initial?.expiry_date ?? "");
 
   const [imagePath, setImagePath] = useState<string | null>(initial?.image_url ?? null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -86,6 +88,7 @@ export function ProductForm({ mode, initial }: Props) {
         purchase_price: Number(purchase || 0),
         selling_price: Number(selling || 0),
         low_stock_threshold: Number(lowStock || 0),
+        expiry_date: expiry || undefined,
       });
       if (!parsed.success) {
         throw new Error(parsed.error.issues[0]?.message ?? "Invalid data");
@@ -112,6 +115,7 @@ export function ProductForm({ mode, initial }: Props) {
         purchase_price: parsed.data.purchase_price,
         selling_price: parsed.data.selling_price,
         low_stock_threshold: parsed.data.low_stock_threshold,
+        expiry_date: parsed.data.expiry_date ?? null,
         image_url: nextPath,
       };
 
@@ -333,6 +337,16 @@ export function ProductForm({ mode, initial }: Props) {
                 inputMode="numeric"
                 min={0}
                 placeholder="5"
+                className="h-11 rounded-xl"
+              />
+            </Field>
+          </div>
+          <div className="mt-3">
+            <Field label="Expiry date">
+              <Input
+                value={expiry}
+                onChange={(e) => setExpiry(e.target.value)}
+                type="date"
                 className="h-11 rounded-xl"
               />
             </Field>

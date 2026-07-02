@@ -19,6 +19,7 @@ export type Database = {
           category: string | null
           created_at: string
           description: string | null
+          expiry_date: string | null
           id: string
           image_url: string | null
           low_stock_threshold: number
@@ -34,6 +35,7 @@ export type Database = {
           category?: string | null
           created_at?: string
           description?: string | null
+          expiry_date?: string | null
           id?: string
           image_url?: string | null
           low_stock_threshold?: number
@@ -49,6 +51,7 @@ export type Database = {
           category?: string | null
           created_at?: string
           description?: string | null
+          expiry_date?: string | null
           id?: string
           image_url?: string | null
           low_stock_threshold?: number
