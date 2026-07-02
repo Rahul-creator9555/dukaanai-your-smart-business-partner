@@ -341,6 +341,16 @@ export function ProductForm({ mode, initial }: Props) {
               />
             </Field>
           </div>
+          <div className="mt-3">
+            <Field label="Expiry date">
+              <Input
+                value={expiry}
+                onChange={(e) => setExpiry(e.target.value)}
+                type="date"
+                className="h-11 rounded-xl"
+              />
+            </Field>
+          </div>
         </section>
 
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 px-6 py-3 backdrop-blur sm:left-1/2 sm:right-auto sm:w-full sm:max-w-md sm:-translate-x-1/2 sm:rounded-b-3xl">
