@@ -48,6 +48,7 @@ export function ProductForm({ mode, initial }: Props) {
   const [purchase, setPurchase] = useState(String(initial?.purchase_price ?? ""));
   const [selling, setSelling] = useState(String(initial?.selling_price ?? ""));
   const [lowStock, setLowStock] = useState(String(initial?.low_stock_threshold ?? 5));
+  const [expiry, setExpiry] = useState(initial?.expiry_date ?? "");
 
   const [imagePath, setImagePath] = useState<string | null>(initial?.image_url ?? null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
