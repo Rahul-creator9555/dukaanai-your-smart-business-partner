@@ -115,6 +115,7 @@ export function ProductForm({ mode, initial }: Props) {
         purchase_price: parsed.data.purchase_price,
         selling_price: parsed.data.selling_price,
         low_stock_threshold: parsed.data.low_stock_threshold,
+        expiry_date: parsed.data.expiry_date ?? null,
         image_url: nextPath,
       };
 
