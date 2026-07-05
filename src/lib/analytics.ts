@@ -15,7 +15,7 @@ export interface ProductMovement {
   id: string;
   name: string;
   category: string;
-  image_path: string | null;
+  image_url: string | null;
   unitsSold: number;
   revenue: number;
   profit: number;
@@ -66,9 +66,9 @@ export function computeAnalytics(products: Product[]): AnalyticsSummary {
   const source = products.length
     ? products
     : ([
-        { id: "demo-1", name: "Sample Product A", category: "Grocery", image_path: null, stock_quantity: 40, low_stock_threshold: 5, purchase_price: 80, selling_price: 120, expiry_date: null } as unknown as Product,
-        { id: "demo-2", name: "Sample Product B", category: "Cosmetics", image_path: null, stock_quantity: 15, low_stock_threshold: 5, purchase_price: 150, selling_price: 250, expiry_date: null } as unknown as Product,
-        { id: "demo-3", name: "Sample Product C", category: "Electronics", image_path: null, stock_quantity: 8, low_stock_threshold: 3, purchase_price: 600, selling_price: 900, expiry_date: null } as unknown as Product,
+        { id: "demo-1", name: "Sample Product A", category: "Grocery", image_url: null, stock_quantity: 40, low_stock_threshold: 5, purchase_price: 80, selling_price: 120, expiry_date: null } as unknown as Product,
+        { id: "demo-2", name: "Sample Product B", category: "Cosmetics", image_url: null, stock_quantity: 15, low_stock_threshold: 5, purchase_price: 150, selling_price: 250, expiry_date: null } as unknown as Product,
+        { id: "demo-3", name: "Sample Product C", category: "Electronics", image_url: null, stock_quantity: 8, low_stock_threshold: 3, purchase_price: 600, selling_price: 900, expiry_date: null } as unknown as Product,
       ]);
 
   // Simulate units sold per product over the window
@@ -86,7 +86,7 @@ export function computeAnalytics(products: Product[]): AnalyticsSummary {
       id: p.id,
       name: p.name,
       category: p.category ?? "Other",
-      image_path: p.image_path ?? null,
+      image_url: p.image_url ?? null,
       unitsSold,
       revenue,
       profit,
