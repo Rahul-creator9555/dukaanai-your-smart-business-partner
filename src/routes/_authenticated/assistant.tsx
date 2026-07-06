@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useT } from "@/lib/i18n";
 import {
   STARTER_PROMPTS,
   assistantKeys,
