@@ -354,14 +354,23 @@ function ProfilePage() {
             </div>
             <Progress value={aiPct} className="mt-2 h-2" />
             <p className="mt-1.5 text-[11px] text-muted-foreground">
-              Resets on 1st of every month · {100 - aiPct}% remaining
+              {aiRemaining.toLocaleString("en-IN")} credits remaining · resets monthly
             </p>
           </div>
         </div>
         <div className="mt-3 grid grid-cols-3 gap-2">
-          <UsageStat label="Descriptions" value="18" />
-          <UsageStat label="Chats" value="24" />
-          <UsageStat label="Images" value="5" />
+          <UsageStat
+            label={`Descriptions · ${CREDIT_COST.descriptions}cr`}
+            value={String(aiUsageByKind.descriptions)}
+          />
+          <UsageStat
+            label={`Chats · ${CREDIT_COST.chats}cr`}
+            value={String(aiUsageByKind.chats)}
+          />
+          <UsageStat
+            label={`Images · ${CREDIT_COST.images}cr`}
+            value={String(aiUsageByKind.images)}
+          />
         </div>
       </section>
 
