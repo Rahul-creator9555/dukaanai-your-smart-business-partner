@@ -25,7 +25,9 @@ export function BottomNav() {
       className="sticky bottom-0 left-0 right-0 z-20 -mx-6 mt-6 border-t border-border bg-card/85 px-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 backdrop-blur-md sm:rounded-b-3xl"
     >
       <ul className="flex items-stretch justify-between">
-        {ITEMS.map(({ to, label, icon: Icon }) => (
+        {ITEMS.map(({ to, labelKey, icon: Icon }) => {
+          const label = t(labelKey);
+          return (
           <li key={to} className="flex-1">
             <Link
               to={to}
@@ -51,7 +53,8 @@ export function BottomNav() {
               )}
             </Link>
           </li>
-        ))}
+          );
+        })}
       </ul>
     </nav>
   );
