@@ -151,6 +151,8 @@ function ProfilePage() {
       return DEFAULT_NOTIFS;
     }
   });
+  const { mode: themeMode, setMode: setThemeMode } = useTheme();
+
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
