@@ -1,22 +1,24 @@
 import { Link } from "@tanstack/react-router";
 import { Home, TrendingUp, Boxes, Sparkles, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useT } from "@/lib/i18n";
 
 type NavItem = {
   to: "/dashboard" | "/trends" | "/inventory" | "/assistant" | "/profile";
-  label: string;
+  labelKey: string;
   icon: LucideIcon;
 };
 
 const ITEMS: NavItem[] = [
-  { to: "/dashboard", label: "Home", icon: Home },
-  { to: "/trends", label: "Trends", icon: TrendingUp },
-  { to: "/inventory", label: "Inventory", icon: Boxes },
-  { to: "/assistant", label: "AI", icon: Sparkles },
-  { to: "/profile", label: "Profile", icon: User },
+  { to: "/dashboard", labelKey: "nav.home", icon: Home },
+  { to: "/trends", labelKey: "nav.trends", icon: TrendingUp },
+  { to: "/inventory", labelKey: "nav.inventory", icon: Boxes },
+  { to: "/assistant", labelKey: "nav.ai", icon: Sparkles },
+  { to: "/profile", labelKey: "nav.profile", icon: User },
 ];
 
 export function BottomNav() {
+  const t = useT();
   return (
     <nav
       aria-label="Primary"
