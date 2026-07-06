@@ -130,6 +130,16 @@ function ThreadPage() {
     if (!last || last.role !== "user") return;
     autoRepliedRef.current = true;
     (async () => {
+      if (!credits.deduct("chats")) {
+        toast.error(t("credits.insufficient"));
+        navigate({
+          to: "/assistant/$threadId",
+          params: { threadId },
+          search: {},
+          replace: true,
+        });
+        return;
+      }
       setThinking(true);
       try {
         const reply = await generatePlaceholderReply(last.content);
