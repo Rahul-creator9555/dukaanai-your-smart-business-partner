@@ -20,6 +20,8 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { MobileShell } from "@/components/MobileShell";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAiCredits } from "@/hooks/use-ai-credits";
+import { useT } from "@/lib/i18n";
 import {
   DropdownMenu,
   DropdownMenuContent,
