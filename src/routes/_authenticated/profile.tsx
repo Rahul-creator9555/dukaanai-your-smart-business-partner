@@ -132,9 +132,7 @@ function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [email, setEmail] = useState<string>("");
   const [plan, setPlan] = useState<string>(() => localStorage.getItem("dk_plan") ?? "free");
-  const [language, setLanguage] = useState<string>(
-    () => localStorage.getItem("dk_lang") ?? "en",
-  );
+  const { lang: language, setLang } = useLang();
   const [langOpen, setLangOpen] = useState(false);
   const [planOpen, setPlanOpen] = useState(false);
   const [notifs, setNotifs] = useState<NotifPrefs>(() => {
@@ -145,6 +143,13 @@ function ProfilePage() {
     }
   });
   const { mode: themeMode, setMode: setThemeMode } = useTheme();
+  const {
+    quota: aiQuota,
+    used: aiUsed,
+    remaining: aiRemaining,
+    pct: aiPct,
+    usage: aiUsageByKind,
+  } = useAiCredits();
 
 
   useEffect(() => {
@@ -169,11 +174,6 @@ function ProfilePage() {
     () => LANGUAGES.find((l) => l.code === language) ?? LANGUAGES[0],
     [language],
   );
-
-  // Mock AI usage — Free 100, Pro 2000, Business 10000
-  const aiQuota = plan === "business" ? 10000 : plan === "pro" ? 2000 : 100;
-  const aiUsed = plan === "business" ? 3120 : plan === "pro" ? 842 : 47;
-  const aiPct = Math.min(100, Math.round((aiUsed / aiQuota) * 100));
 
   const signOut = async () => {
     await queryClient.cancelQueries();
