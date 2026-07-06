@@ -80,6 +80,9 @@ function ThreadPage() {
     mutationFn: async (text: string) => {
       const trimmed = text.trim();
       if (!trimmed) return;
+      if (!credits.deduct("chats")) {
+        throw new Error(t("credits.insufficient"));
+      }
       const userMsg = await insertMessage(threadId, "user", trimmed);
       qc.setQueryData<ChatMessage[]>(assistantKeys.messages(threadId), (prev) =>
         prev ? [...prev, userMsg] : [userMsg],
