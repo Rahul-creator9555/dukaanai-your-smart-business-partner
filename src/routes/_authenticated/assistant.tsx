@@ -73,9 +73,9 @@ function AssistantHubPage() {
               AI Assistant
             </span>
           </div>
-          <h1 className="mt-1 text-xl font-bold tracking-tight">Ask anything</h1>
+          <h1 className="mt-1 text-xl font-bold tracking-tight">{t("assistant.askAnything")}</h1>
           <p className="text-xs text-muted-foreground">
-            Get help running your shop — trends, stock, listings, and reports.
+            {t("assistant.tagline")}
           </p>
         </div>
         <button
