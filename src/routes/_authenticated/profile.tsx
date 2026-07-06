@@ -415,6 +415,43 @@ function ProfilePage() {
         </Dialog>
       </section>
 
+      {/* Appearance */}
+      <SectionLabel>Appearance</SectionLabel>
+      <section
+        role="radiogroup"
+        aria-label="Theme"
+        className="mt-2 grid grid-cols-3 gap-2 rounded-3xl border border-border bg-card p-2 shadow-elevation-1"
+      >
+        {(
+          [
+            { id: "light", label: "Light", icon: Sun },
+            { id: "dark", label: "Dark", icon: Moon },
+            { id: "system", label: "System", icon: MonitorSmartphone },
+          ] as const
+        ).map(({ id, label, icon: Icon }) => {
+          const active = themeMode === id;
+          return (
+            <button
+              key={id}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              onClick={() => setThemeMode(id as ThemeMode)}
+              className={`flex min-h-11 flex-col items-center justify-center gap-1 rounded-2xl px-2 py-3 text-xs font-medium transition-all ${
+                active
+                  ? "bg-primary-container text-on-primary-container shadow-elevation-1"
+                  : "bg-transparent text-muted-foreground hover:bg-secondary/60"
+              }`}
+            >
+              <Icon className="h-4 w-4" aria-hidden="true" />
+              {label}
+            </button>
+          );
+        })}
+      </section>
+
+
+
       {/* Notifications */}
       <SectionLabel>Notifications</SectionLabel>
       <section className="mt-2 divide-y divide-border rounded-3xl border border-border bg-card shadow-elevation-1">
