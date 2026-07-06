@@ -30,6 +30,7 @@ export const Route = createFileRoute("/_authenticated/assistant")({
 function AssistantHubPage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const t = useT();
 
   const { data: threads, isLoading } = useQuery({
     queryKey: assistantKeys.threads(),
