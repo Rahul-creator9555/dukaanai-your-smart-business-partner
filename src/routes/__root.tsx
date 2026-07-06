@@ -17,6 +17,7 @@ import manropeFont from "@fontsource/manrope/600.css?url";
 import manropeFont700 from "@fontsource/manrope/700.css?url";
 import { Toaster } from "sonner";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { LanguageProvider } from "../lib/i18n";
 
 function NotFoundComponent() {
   return (
@@ -131,8 +132,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <Toaster position="top-center" richColors closeButton />
+      <LanguageProvider>
+        <Outlet />
+        <Toaster position="top-center" richColors closeButton />
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }

@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useT } from "@/lib/i18n";
 import {
   STARTER_PROMPTS,
   assistantKeys,
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/_authenticated/assistant")({
 function AssistantHubPage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const t = useT();
 
   const { data: threads, isLoading } = useQuery({
     queryKey: assistantKeys.threads(),
@@ -71,9 +73,9 @@ function AssistantHubPage() {
               AI Assistant
             </span>
           </div>
-          <h1 className="mt-1 text-xl font-bold tracking-tight">Ask anything</h1>
+          <h1 className="mt-1 text-xl font-bold tracking-tight">{t("assistant.askAnything")}</h1>
           <p className="text-xs text-muted-foreground">
-            Get help running your shop — trends, stock, listings, and reports.
+            {t("assistant.tagline")}
           </p>
         </div>
         <button

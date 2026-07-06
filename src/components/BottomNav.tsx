@@ -1,29 +1,33 @@
 import { Link } from "@tanstack/react-router";
 import { Home, TrendingUp, Boxes, Sparkles, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useT } from "@/lib/i18n";
 
 type NavItem = {
   to: "/dashboard" | "/trends" | "/inventory" | "/assistant" | "/profile";
-  label: string;
+  labelKey: string;
   icon: LucideIcon;
 };
 
 const ITEMS: NavItem[] = [
-  { to: "/dashboard", label: "Home", icon: Home },
-  { to: "/trends", label: "Trends", icon: TrendingUp },
-  { to: "/inventory", label: "Inventory", icon: Boxes },
-  { to: "/assistant", label: "AI", icon: Sparkles },
-  { to: "/profile", label: "Profile", icon: User },
+  { to: "/dashboard", labelKey: "nav.home", icon: Home },
+  { to: "/trends", labelKey: "nav.trends", icon: TrendingUp },
+  { to: "/inventory", labelKey: "nav.inventory", icon: Boxes },
+  { to: "/assistant", labelKey: "nav.ai", icon: Sparkles },
+  { to: "/profile", labelKey: "nav.profile", icon: User },
 ];
 
 export function BottomNav() {
+  const t = useT();
   return (
     <nav
       aria-label="Primary"
       className="sticky bottom-0 left-0 right-0 z-20 -mx-6 mt-6 border-t border-border bg-card/85 px-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 backdrop-blur-md sm:rounded-b-3xl"
     >
       <ul className="flex items-stretch justify-between">
-        {ITEMS.map(({ to, label, icon: Icon }) => (
+        {ITEMS.map(({ to, labelKey, icon: Icon }) => {
+          const label = t(labelKey);
+          return (
           <li key={to} className="flex-1">
             <Link
               to={to}
@@ -49,7 +53,8 @@ export function BottomNav() {
               )}
             </Link>
           </li>
-        ))}
+          );
+        })}
       </ul>
     </nav>
   );

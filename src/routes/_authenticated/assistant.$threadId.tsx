@@ -20,6 +20,8 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { MobileShell } from "@/components/MobileShell";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAiCredits } from "@/hooks/use-ai-credits";
+import { useT } from "@/lib/i18n";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,6 +57,8 @@ function ThreadPage() {
   const navigate = useNavigate();
   const router = useRouter();
   const qc = useQueryClient();
+  const credits = useAiCredits();
+  const t = useT();
 
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
@@ -76,6 +80,9 @@ function ThreadPage() {
     mutationFn: async (text: string) => {
       const trimmed = text.trim();
       if (!trimmed) return;
+      if (!credits.deduct("chats")) {
+        throw new Error(t("credits.insufficient"));
+      }
       const userMsg = await insertMessage(threadId, "user", trimmed);
       qc.setQueryData<ChatMessage[]>(assistantKeys.messages(threadId), (prev) =>
         prev ? [...prev, userMsg] : [userMsg],
@@ -123,6 +130,16 @@ function ThreadPage() {
     if (!last || last.role !== "user") return;
     autoRepliedRef.current = true;
     (async () => {
+      if (!credits.deduct("chats")) {
+        toast.error(t("credits.insufficient"));
+        navigate({
+          to: "/assistant/$threadId",
+          params: { threadId },
+          search: {},
+          replace: true,
+        });
+        return;
+      }
       setThinking(true);
       try {
         const reply = await generatePlaceholderReply(last.content);

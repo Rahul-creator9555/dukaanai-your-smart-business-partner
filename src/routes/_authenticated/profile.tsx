@@ -54,6 +54,8 @@ import {
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
 import { supabase } from "@/integrations/supabase/client";
+import { LANGUAGES, useLang } from "@/lib/i18n";
+import { useAiCredits, CREDIT_COST } from "@/hooks/use-ai-credits";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({ meta: [{ title: "Profile — DukaanAI" }] }),
@@ -86,15 +88,6 @@ const DEFAULT_NOTIFS: NotifPrefs = {
   marketing: false,
 };
 
-const LANGUAGES = [
-  { code: "en", label: "English", native: "English" },
-  { code: "hi", label: "Hindi", native: "हिन्दी" },
-  { code: "ta", label: "Tamil", native: "தமிழ்" },
-  { code: "te", label: "Telugu", native: "తెలుగు" },
-  { code: "bn", label: "Bengali", native: "বাংলা" },
-  { code: "mr", label: "Marathi", native: "मराठी" },
-  { code: "gu", label: "Gujarati", native: "ગુજરાતી" },
-] as const;
 
 const PLANS = [
   {
@@ -139,9 +132,7 @@ function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [email, setEmail] = useState<string>("");
   const [plan, setPlan] = useState<string>(() => localStorage.getItem("dk_plan") ?? "free");
-  const [language, setLanguage] = useState<string>(
-    () => localStorage.getItem("dk_lang") ?? "en",
-  );
+  const { lang: language, setLang } = useLang();
   const [langOpen, setLangOpen] = useState(false);
   const [planOpen, setPlanOpen] = useState(false);
   const [notifs, setNotifs] = useState<NotifPrefs>(() => {
@@ -152,6 +143,13 @@ function ProfilePage() {
     }
   });
   const { mode: themeMode, setMode: setThemeMode } = useTheme();
+  const {
+    quota: aiQuota,
+    used: aiUsed,
+    remaining: aiRemaining,
+    pct: aiPct,
+    usage: aiUsageByKind,
+  } = useAiCredits();
 
 
   useEffect(() => {
@@ -177,11 +175,6 @@ function ProfilePage() {
     [language],
   );
 
-  // Mock AI usage — Free 100, Pro 2000, Business 10000
-  const aiQuota = plan === "business" ? 10000 : plan === "pro" ? 2000 : 100;
-  const aiUsed = plan === "business" ? 3120 : plan === "pro" ? 842 : 47;
-  const aiPct = Math.min(100, Math.round((aiUsed / aiQuota) * 100));
-
   const signOut = async () => {
     await queryClient.cancelQueries();
     queryClient.clear();
@@ -198,8 +191,7 @@ function ProfilePage() {
   };
 
   const chooseLang = (code: string) => {
-    setLanguage(code);
-    localStorage.setItem("dk_lang", code);
+    setLang(code as typeof language);
     setLangOpen(false);
     toast.success(`Language: ${LANGUAGES.find((l) => l.code === code)?.native}`);
   };
@@ -362,14 +354,23 @@ function ProfilePage() {
             </div>
             <Progress value={aiPct} className="mt-2 h-2" />
             <p className="mt-1.5 text-[11px] text-muted-foreground">
-              Resets on 1st of every month · {100 - aiPct}% remaining
+              {aiRemaining.toLocaleString("en-IN")} credits remaining · resets monthly
             </p>
           </div>
         </div>
         <div className="mt-3 grid grid-cols-3 gap-2">
-          <UsageStat label="Descriptions" value="18" />
-          <UsageStat label="Chats" value="24" />
-          <UsageStat label="Images" value="5" />
+          <UsageStat
+            label={`Descriptions · ${CREDIT_COST.descriptions}cr`}
+            value={String(aiUsageByKind.descriptions)}
+          />
+          <UsageStat
+            label={`Chats · ${CREDIT_COST.chats}cr`}
+            value={String(aiUsageByKind.chats)}
+          />
+          <UsageStat
+            label={`Images · ${CREDIT_COST.images}cr`}
+            value={String(aiUsageByKind.images)}
+          />
         </div>
       </section>
 
