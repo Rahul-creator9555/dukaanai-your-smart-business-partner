@@ -191,8 +191,7 @@ function ProfilePage() {
   };
 
   const chooseLang = (code: string) => {
-    setLanguage(code);
-    localStorage.setItem("dk_lang", code);
+    setLang(code as typeof language);
     setLangOpen(false);
     toast.success(`Language: ${LANGUAGES.find((l) => l.code === code)?.native}`);
   };
