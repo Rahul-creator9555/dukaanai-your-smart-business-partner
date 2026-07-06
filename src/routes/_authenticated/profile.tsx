@@ -54,6 +54,8 @@ import {
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
 import { supabase } from "@/integrations/supabase/client";
+import { LANGUAGES, useLang } from "@/lib/i18n";
+import { useAiCredits, CREDIT_COST } from "@/hooks/use-ai-credits";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({ meta: [{ title: "Profile — DukaanAI" }] }),
