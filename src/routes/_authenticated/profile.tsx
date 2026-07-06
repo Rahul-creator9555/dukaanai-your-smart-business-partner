@@ -88,15 +88,6 @@ const DEFAULT_NOTIFS: NotifPrefs = {
   marketing: false,
 };
 
-const LANGUAGES = [
-  { code: "en", label: "English", native: "English" },
-  { code: "hi", label: "Hindi", native: "हिन्दी" },
-  { code: "ta", label: "Tamil", native: "தமிழ்" },
-  { code: "te", label: "Telugu", native: "తెలుగు" },
-  { code: "bn", label: "Bengali", native: "বাংলা" },
-  { code: "mr", label: "Marathi", native: "मराठी" },
-  { code: "gu", label: "Gujarati", native: "ગુજરાતી" },
-] as const;
 
 const PLANS = [
   {
