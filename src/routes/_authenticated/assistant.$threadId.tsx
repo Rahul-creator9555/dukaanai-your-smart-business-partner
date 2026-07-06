@@ -57,6 +57,8 @@ function ThreadPage() {
   const navigate = useNavigate();
   const router = useRouter();
   const qc = useQueryClient();
+  const credits = useAiCredits();
+  const t = useT();
 
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
