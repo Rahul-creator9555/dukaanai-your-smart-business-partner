@@ -78,12 +78,15 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+const THEME_INIT_SCRIPT = `(function(){try{var s=localStorage.getItem('dk_theme');var m=window.matchMedia('(prefers-color-scheme: dark)').matches;var dark=s==='dark'||(s!=='light'&&m);document.documentElement.classList.toggle('dark',dark);}catch(e){}})();`;
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#ffffff" },
+      { name: "theme-color", content: "#ffffff", media: "(prefers-color-scheme: light)" },
+      { name: "theme-color", content: "#0f1424", media: "(prefers-color-scheme: dark)" },
       { title: "DukaanAI — AI assistant for local retailers" },
       { name: "description", content: "DukaanAI helps local retailers digitize their stores, manage products, and discover trending items." },
       { property: "og:title", content: "DukaanAI" },
@@ -98,6 +101,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: manropeFont },
       { rel: "stylesheet", href: manropeFont700 },
       { rel: "stylesheet", href: appCss },
+    ],
+    scripts: [
+      { children: THEME_INIT_SCRIPT },
     ],
   }),
   shellComponent: RootShell,
