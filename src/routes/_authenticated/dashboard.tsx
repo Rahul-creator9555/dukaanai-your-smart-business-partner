@@ -29,50 +29,6 @@ interface Profile {
   shop_category: string | null;
 }
 
-const STATS = [
-  {
-    label: "Total Products",
-    value: "128",
-    delta: "+4 this week",
-    icon: Package,
-    tone: "primary" as const,
-  },
-  {
-    label: "Trending",
-    value: "12",
-    delta: "Hot in your area",
-    icon: TrendingUp,
-    tone: "accent" as const,
-  },
-  {
-    label: "Inventory Alerts",
-    value: "3",
-    delta: "Low stock",
-    icon: AlertTriangle,
-    tone: "warn" as const,
-  },
-];
-
-const QUICK_ACTIONS = [
-  { label: "Add Product", icon: PackagePlus, to: "/products/new" as const },
-  { label: "Inventory", icon: Boxes, to: "/inventory" as const },
-  { label: "Analytics", icon: BarChart3, to: "/analytics" as const },
-  { label: "AI Assistant", icon: Sparkles, to: "/assistant" as const },
-];
-
-const ACTIVITY = [
-  { title: "Added 'Dove Soap 100g' to inventory", time: "2h ago", icon: PackagePlus },
-  { title: "Low stock alert: Parle-G biscuits", time: "5h ago", icon: AlertTriangle },
-  { title: "Trend spotted: Cold-pressed juice", time: "Yesterday", icon: TrendingUp },
-];
-
-function greeting() {
-  const h = new Date().getHours();
-  if (h < 12) return "Good morning";
-  if (h < 17) return "Good afternoon";
-  return "Good evening";
-}
-
 function initials(name?: string | null, fallback = "DA") {
   if (!name) return fallback;
   const parts = name.trim().split(/\s+/).slice(0, 2);
