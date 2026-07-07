@@ -52,15 +52,17 @@ export const Route = createFileRoute("/_authenticated/inventory")({
 
 type Tab = "all" | "low" | "out" | "expiring";
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "low", label: "Low stock" },
-  { id: "out", label: "Out of stock" },
-  { id: "expiring", label: "Expiring" },
-];
+const TAB_IDS: Tab[] = ["all", "low", "out", "expiring"];
+const TAB_KEY: Record<Tab, string> = {
+  all: "inv.tab.all",
+  low: "inv.tab.low",
+  out: "inv.tab.out",
+  expiring: "inv.tab.expiring",
+};
 
 function InventoryPage() {
   const navigate = useNavigate();
+  const t = useT();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("all");
