@@ -147,6 +147,7 @@ function TrendCard({
   status?: Action;
   onAction: (a: Action) => void;
 }) {
+  const t = useT();
   const tone = demandTone(product.demand);
   const isHave = status === "have";
   const isAdded = status === "added";
