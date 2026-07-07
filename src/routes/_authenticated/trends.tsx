@@ -76,15 +76,17 @@ function TrendsPage() {
       <header className="flex items-center justify-between">
         <button
           onClick={() => navigate({ to: "/dashboard" })}
-          aria-label="Back"
+          aria-label={t("common.back")}
           className="grid h-10 w-10 place-items-center rounded-full bg-secondary text-secondary-foreground hover:bg-accent"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
         <div className="text-center">
-          <h1 className="text-lg font-semibold tracking-tight">Trending</h1>
+          <h1 className="text-lg font-semibold tracking-tight">{t("trends.title")}</h1>
           {shopCategory && (
-            <p className="text-[11px] text-muted-foreground">For {shopCategory} stores</p>
+            <p className="text-[11px] text-muted-foreground">
+              {t("trends.forCategory", { cat: shopCategory })}
+            </p>
           )}
         </div>
         <span className="grid h-10 w-10 place-items-center rounded-full bg-primary-container text-on-primary-container">
@@ -107,7 +109,7 @@ function TrendsPage() {
                     : "bg-secondary text-secondary-foreground hover:bg-accent"
                 }`}
               >
-                {c}
+                {c === "All" ? t("trends.all") : c}
               </button>
             );
           })}
@@ -117,7 +119,7 @@ function TrendsPage() {
       <section className="mt-5 space-y-4 pb-4">
         {visible.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-border bg-card/50 p-10 text-center">
-            <p className="text-sm text-muted-foreground">No trending products to show.</p>
+            <p className="text-sm text-muted-foreground">{t("trends.empty")}</p>
           </div>
         ) : (
           visible.map((p) => (
