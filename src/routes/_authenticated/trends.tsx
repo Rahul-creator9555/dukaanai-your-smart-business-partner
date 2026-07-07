@@ -23,6 +23,7 @@ type Action = "have" | "added" | "ignored";
 
 function TrendsPage() {
   const navigate = useNavigate();
+  const t = useT();
   const [shopCategory, setShopCategory] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [actions, setActions] = useState<Record<string, Action>>({});
