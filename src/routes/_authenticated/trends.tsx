@@ -185,7 +185,7 @@ function TrendCard({
           </div>
           <div className="shrink-0 text-right">
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-              Est. profit
+              {t("trends.estProfit")}
             </p>
             <p className="text-sm font-bold text-primary">
               {formatCurrency(product.estimatedProfit)}
@@ -196,7 +196,7 @@ function TrendCard({
         {/* Trend score bar */}
         <div className="mt-3">
           <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-            <span>Trend score</span>
+            <span>{t("trends.trendScore")}</span>
             <span className="font-semibold text-foreground">{product.trendScore}/100</span>
           </div>
           <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
@@ -219,7 +219,7 @@ function TrendCard({
             }`}
           >
             <Check className="h-3.5 w-3.5" />
-            {isHave ? "In stock" : "I have this"}
+            {isHave ? t("trends.inStockBadge") : t("trends.iHave")}
           </button>
           <button
             onClick={() => onAction("added")}
@@ -227,14 +227,14 @@ function TrendCard({
             className="flex items-center justify-center gap-1 rounded-2xl bg-primary px-2 py-2.5 text-[11px] font-semibold text-primary-foreground shadow-elevation-1 transition hover:opacity-90 disabled:opacity-60"
           >
             <Plus className="h-3.5 w-3.5" />
-            Add
+            {t("common.add")}
           </button>
           <button
             onClick={() => onAction("ignored")}
             className="flex items-center justify-center gap-1 rounded-2xl border border-border bg-card px-2 py-2.5 text-[11px] font-semibold text-muted-foreground transition hover:bg-secondary"
           >
             <X className="h-3.5 w-3.5" />
-            Ignore
+            {t("trends.ignore")}
           </button>
         </div>
       </div>
