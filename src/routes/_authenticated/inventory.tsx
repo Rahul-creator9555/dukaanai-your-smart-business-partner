@@ -32,6 +32,7 @@ import { ProductImage } from "@/components/ProductImage";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useT } from "@/lib/i18n";
 import {
   PRODUCT_CATEGORIES,
   computeInventoryStats,
