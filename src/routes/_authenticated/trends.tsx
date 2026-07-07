@@ -6,6 +6,7 @@ import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
 import { supabase } from "@/integrations/supabase/client";
 import { PRODUCT_CATEGORIES, formatCurrency } from "@/lib/products";
+import { useT } from "@/lib/i18n";
 import {
   TRENDING_PRODUCTS,
   demandTone,
@@ -22,6 +23,7 @@ type Action = "have" | "added" | "ignored";
 
 function TrendsPage() {
   const navigate = useNavigate();
+  const t = useT();
   const [shopCategory, setShopCategory] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [actions, setActions] = useState<Record<string, Action>>({});
@@ -74,15 +76,17 @@ function TrendsPage() {
       <header className="flex items-center justify-between">
         <button
           onClick={() => navigate({ to: "/dashboard" })}
-          aria-label="Back"
+          aria-label={t("common.back")}
           className="grid h-10 w-10 place-items-center rounded-full bg-secondary text-secondary-foreground hover:bg-accent"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
         <div className="text-center">
-          <h1 className="text-lg font-semibold tracking-tight">Trending</h1>
+          <h1 className="text-lg font-semibold tracking-tight">{t("trends.title")}</h1>
           {shopCategory && (
-            <p className="text-[11px] text-muted-foreground">For {shopCategory} stores</p>
+            <p className="text-[11px] text-muted-foreground">
+              {t("trends.forCategory", { cat: shopCategory })}
+            </p>
           )}
         </div>
         <span className="grid h-10 w-10 place-items-center rounded-full bg-primary-container text-on-primary-container">
@@ -105,7 +109,7 @@ function TrendsPage() {
                     : "bg-secondary text-secondary-foreground hover:bg-accent"
                 }`}
               >
-                {c}
+                {c === "All" ? t("trends.all") : c}
               </button>
             );
           })}
@@ -115,7 +119,7 @@ function TrendsPage() {
       <section className="mt-5 space-y-4 pb-4">
         {visible.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-border bg-card/50 p-10 text-center">
-            <p className="text-sm text-muted-foreground">No trending products to show.</p>
+            <p className="text-sm text-muted-foreground">{t("trends.empty")}</p>
           </div>
         ) : (
           visible.map((p) => (
@@ -143,6 +147,7 @@ function TrendCard({
   status?: Action;
   onAction: (a: Action) => void;
 }) {
+  const t = useT();
   const tone = demandTone(product.demand);
   const isHave = status === "have";
   const isAdded = status === "added";
@@ -180,7 +185,7 @@ function TrendCard({
           </div>
           <div className="shrink-0 text-right">
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-              Est. profit
+              {t("trends.estProfit")}
             </p>
             <p className="text-sm font-bold text-primary">
               {formatCurrency(product.estimatedProfit)}
@@ -191,7 +196,7 @@ function TrendCard({
         {/* Trend score bar */}
         <div className="mt-3">
           <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-            <span>Trend score</span>
+            <span>{t("trends.trendScore")}</span>
             <span className="font-semibold text-foreground">{product.trendScore}/100</span>
           </div>
           <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
@@ -214,7 +219,7 @@ function TrendCard({
             }`}
           >
             <Check className="h-3.5 w-3.5" />
-            {isHave ? "In stock" : "I have this"}
+            {isHave ? t("trends.inStockBadge") : t("trends.iHave")}
           </button>
           <button
             onClick={() => onAction("added")}
@@ -222,14 +227,14 @@ function TrendCard({
             className="flex items-center justify-center gap-1 rounded-2xl bg-primary px-2 py-2.5 text-[11px] font-semibold text-primary-foreground shadow-elevation-1 transition hover:opacity-90 disabled:opacity-60"
           >
             <Plus className="h-3.5 w-3.5" />
-            Add
+            {t("common.add")}
           </button>
           <button
             onClick={() => onAction("ignored")}
             className="flex items-center justify-center gap-1 rounded-2xl border border-border bg-card px-2 py-2.5 text-[11px] font-semibold text-muted-foreground transition hover:bg-secondary"
           >
             <X className="h-3.5 w-3.5" />
-            Ignore
+            {t("trends.ignore")}
           </button>
         </div>
       </div>

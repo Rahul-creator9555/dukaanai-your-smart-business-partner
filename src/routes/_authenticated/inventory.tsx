@@ -32,6 +32,7 @@ import { ProductImage } from "@/components/ProductImage";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useT } from "@/lib/i18n";
 import {
   PRODUCT_CATEGORIES,
   computeInventoryStats,
@@ -51,15 +52,17 @@ export const Route = createFileRoute("/_authenticated/inventory")({
 
 type Tab = "all" | "low" | "out" | "expiring";
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "low", label: "Low stock" },
-  { id: "out", label: "Out of stock" },
-  { id: "expiring", label: "Expiring" },
-];
+const TAB_IDS: Tab[] = ["all", "low", "out", "expiring"];
+const TAB_KEY: Record<Tab, string> = {
+  all: "inv.tab.all",
+  low: "inv.tab.low",
+  out: "inv.tab.out",
+  expiring: "inv.tab.expiring",
+};
 
 function InventoryPage() {
   const navigate = useNavigate();
+  const t = useT();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("all");
@@ -123,14 +126,14 @@ function InventoryPage() {
             type="button"
             onClick={() => navigate({ to: "/dashboard" })}
             className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
-            aria-label="Back"
+            aria-label={t("common.back")}
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
           <div>
-            <h1 className="text-xl font-bold tracking-tight">Inventory</h1>
+            <h1 className="text-xl font-bold tracking-tight">{t("inv.title")}</h1>
             <p className="text-xs text-muted-foreground">
-              {stats.totalSkus} SKU{stats.totalSkus === 1 ? "" : "s"} · {stats.totalUnits} units
+              {t("inv.count", { sku: stats.totalSkus, units: stats.totalUnits })}
             </p>
           </div>
         </div>
@@ -139,7 +142,7 @@ function InventoryPage() {
           className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground shadow-elevation-1 transition-transform hover:scale-105"
         >
           <Plus className="h-3.5 w-3.5" />
-          Add
+          {t("common.add")}
         </Link>
       </header>
 
@@ -147,31 +150,32 @@ function InventoryPage() {
       <section className="mt-5 grid grid-cols-2 gap-3">
         <StatCard
           icon={<IndianRupee className="h-4 w-4" />}
-          label="Stock value"
+          label={t("inv.stockValue")}
           value={formatCurrency(stats.inventoryValue)}
           tone="primary"
         />
         <StatCard
           icon={<TrendingUp className="h-4 w-4" />}
-          label="Potential revenue"
+          label={t("inv.potentialRevenue")}
           value={formatCurrency(stats.potentialRevenue)}
           tone="success"
         />
         <StatCard
           icon={<AlertTriangle className="h-4 w-4" />}
-          label="Low stock"
+          label={t("inv.lowStock")}
           value={String(stats.lowCount)}
           tone="warning"
           onClick={() => setTab("low")}
         />
         <StatCard
           icon={<PackageX className="h-4 w-4" />}
-          label="Out of stock"
+          label={t("inv.outOfStock")}
           value={String(stats.outCount)}
           tone="danger"
           onClick={() => setTab("out")}
         />
       </section>
+
 
       {/* Charts */}
       {list.length > 0 && (
@@ -250,28 +254,28 @@ function InventoryPage() {
 
       {/* Tabs */}
       <div className="mt-5 flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {TABS.map((t) => {
+        {TAB_IDS.map((id) => {
           const count =
-            t.id === "low"
+            id === "low"
               ? stats.lowCount
-              : t.id === "out"
+              : id === "out"
                 ? stats.outCount
-                : t.id === "expiring"
+                : id === "expiring"
                   ? stats.expiringCount + stats.expiredCount
                   : stats.totalSkus;
-          const active = tab === t.id;
+          const active = tab === id;
           return (
             <button
-              key={t.id}
+              key={id}
               type="button"
-              onClick={() => setTab(t.id)}
+              onClick={() => setTab(id)}
               className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
                 active
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-border bg-card text-foreground hover:bg-secondary"
               }`}
             >
-              {t.label}
+              {t(TAB_KEY[id])}
               <span
                 className={`rounded-full px-1.5 text-[10px] font-semibold ${
                   active ? "bg-primary-foreground/20" : "bg-secondary"

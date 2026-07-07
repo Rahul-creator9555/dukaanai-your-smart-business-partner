@@ -16,6 +16,7 @@ import {
 import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
 import { supabase } from "@/integrations/supabase/client";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Home — DukaanAI" }] }),
@@ -28,50 +29,6 @@ interface Profile {
   shop_category: string | null;
 }
 
-const STATS = [
-  {
-    label: "Total Products",
-    value: "128",
-    delta: "+4 this week",
-    icon: Package,
-    tone: "primary" as const,
-  },
-  {
-    label: "Trending",
-    value: "12",
-    delta: "Hot in your area",
-    icon: TrendingUp,
-    tone: "accent" as const,
-  },
-  {
-    label: "Inventory Alerts",
-    value: "3",
-    delta: "Low stock",
-    icon: AlertTriangle,
-    tone: "warn" as const,
-  },
-];
-
-const QUICK_ACTIONS = [
-  { label: "Add Product", icon: PackagePlus, to: "/products/new" as const },
-  { label: "Inventory", icon: Boxes, to: "/inventory" as const },
-  { label: "Analytics", icon: BarChart3, to: "/analytics" as const },
-  { label: "AI Assistant", icon: Sparkles, to: "/assistant" as const },
-];
-
-const ACTIVITY = [
-  { title: "Added 'Dove Soap 100g' to inventory", time: "2h ago", icon: PackagePlus },
-  { title: "Low stock alert: Parle-G biscuits", time: "5h ago", icon: AlertTriangle },
-  { title: "Trend spotted: Cold-pressed juice", time: "Yesterday", icon: TrendingUp },
-];
-
-function greeting() {
-  const h = new Date().getHours();
-  if (h < 12) return "Good morning";
-  if (h < 17) return "Good afternoon";
-  return "Good evening";
-}
-
 function initials(name?: string | null, fallback = "DA") {
   if (!name) return fallback;
   const parts = name.trim().split(/\s+/).slice(0, 2);
@@ -80,6 +37,7 @@ function initials(name?: string | null, fallback = "DA") {
 
 function Dashboard() {
   const navigate = useNavigate();
+  const t = useT();
   const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
@@ -94,6 +52,50 @@ function Dashboard() {
     });
   }, []);
 
+  const greeting = () => {
+    const h = new Date().getHours();
+    if (h < 12) return t("dash.goodMorning");
+    if (h < 17) return t("dash.goodAfternoon");
+    return t("dash.goodEvening");
+  };
+
+  const STATS = [
+    {
+      label: t("dash.stat.total"),
+      value: "128",
+      delta: t("dash.stat.totalDelta"),
+      icon: Package,
+      tone: "primary" as const,
+    },
+    {
+      label: t("dash.stat.trending"),
+      value: "12",
+      delta: t("dash.stat.trendingDelta"),
+      icon: TrendingUp,
+      tone: "accent" as const,
+    },
+    {
+      label: t("dash.stat.alerts"),
+      value: "3",
+      delta: t("dash.stat.alertsDelta"),
+      icon: AlertTriangle,
+      tone: "warn" as const,
+    },
+  ];
+
+  const QUICK_ACTIONS = [
+    { label: t("dash.action.addProduct"), icon: PackagePlus, to: "/products/new" as const },
+    { label: t("dash.action.inventory"), icon: Boxes, to: "/inventory" as const },
+    { label: t("dash.action.analytics"), icon: BarChart3, to: "/analytics" as const },
+    { label: t("dash.action.assistant"), icon: Sparkles, to: "/assistant" as const },
+  ];
+
+  const ACTIVITY = [
+    { title: "Added 'Dove Soap 100g' to inventory", time: "2h ago", icon: PackagePlus },
+    { title: "Low stock alert: Parle-G biscuits", time: "5h ago", icon: AlertTriangle },
+    { title: "Trend spotted: Cold-pressed juice", time: "Yesterday", icon: TrendingUp },
+  ];
+
   return (
     <MobileShell>
       {/* Header */}
@@ -102,17 +104,17 @@ function Dashboard() {
           <p className="text-sm text-muted-foreground">
             {greeting()},{" "}
             <span className="font-medium text-foreground">
-              {profile?.full_name?.split(" ")[0] ?? "there"}
+              {profile?.full_name?.split(" ")[0] ?? t("dash.there")}
             </span>
           </p>
           <h1 className="mt-0.5 truncate text-xl font-bold tracking-tight">
-            {profile?.shop_name ?? "Your shop"}
+            {profile?.shop_name ?? t("dash.yourShop")}
           </h1>
         </div>
         <div className="flex items-center gap-2">
           <button
             type="button"
-            aria-label="Notifications"
+            aria-label={t("dash.notifications")}
             className="relative grid h-10 w-10 place-items-center rounded-full bg-secondary text-secondary-foreground transition-colors hover:bg-accent"
           >
             <Bell className="h-4 w-4" />
@@ -121,7 +123,7 @@ function Dashboard() {
           <button
             type="button"
             onClick={() => navigate({ to: "/profile" })}
-            aria-label="Profile"
+            aria-label={t("profile.title")}
             className="grid h-10 w-10 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground shadow-elevation-1 transition-transform hover:scale-105"
           >
             {initials(profile?.full_name ?? profile?.shop_name)}
@@ -134,20 +136,20 @@ function Dashboard() {
         <div className="flex items-start justify-between gap-3">
           <div>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium backdrop-blur">
-              <Sparkles className="h-3 w-3" /> AI Assistant
+              <Sparkles className="h-3 w-3" /> {t("dash.aiTag")}
             </span>
             <h2 className="mt-3 text-base font-semibold leading-snug">
-              Get product ideas trending near you
+              {t("dash.aiTitle")}
             </h2>
             <p className="mt-1 text-xs text-primary-foreground/85">
-              Tap to ask DukaanAI anything about your shop.
+              {t("dash.aiSubtitle")}
             </p>
           </div>
           <button
             type="button"
             onClick={() => navigate({ to: "/assistant" })}
             className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/15 text-primary-foreground transition-all hover:bg-white/25 hover:scale-105"
-            aria-label="Open assistant"
+            aria-label={t("dash.openAssistant")}
           >
             <ArrowRight className="h-4 w-4" />
           </button>
@@ -156,7 +158,7 @@ function Dashboard() {
 
       {/* Quick stats */}
       <section className="mt-6">
-        <SectionTitle>Quick stats</SectionTitle>
+        <SectionTitle>{t("dash.quickStats")}</SectionTitle>
         <div className="mt-3 -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {STATS.map((s) => (
             <StatCard key={s.label} {...s} />
@@ -166,7 +168,7 @@ function Dashboard() {
 
       {/* Quick actions */}
       <section className="mt-6">
-        <SectionTitle>Quick actions</SectionTitle>
+        <SectionTitle>{t("dash.quickActions")}</SectionTitle>
         <div className="mt-3 grid grid-cols-4 gap-3">
           {QUICK_ACTIONS.map((a) => (
             <button
@@ -189,9 +191,9 @@ function Dashboard() {
       {/* Recent activity */}
       <section className="mt-6">
         <div className="flex items-center justify-between">
-          <SectionTitle>Recent activity</SectionTitle>
+          <SectionTitle>{t("dash.recentActivity")}</SectionTitle>
           <button className="text-xs font-medium text-primary hover:underline">
-            View all
+            {t("common.viewAll")}
           </button>
         </div>
         <div className="mt-3 divide-y divide-border rounded-2xl border border-border bg-card shadow-elevation-1">
@@ -216,6 +218,7 @@ function Dashboard() {
           ))}
         </div>
       </section>
+
 
       {/* Floating add */}
       <button

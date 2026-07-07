@@ -20,8 +20,9 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { MobileShell } from "@/components/MobileShell";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAiCredits } from "@/hooks/use-ai-credits";
+import { useAiCredits, CREDIT_COST } from "@/hooks/use-ai-credits";
 import { useT } from "@/lib/i18n";
+import { AlertTriangle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -182,8 +183,11 @@ function ThreadPage() {
     [isLoading, messages, thinking],
   );
 
+  const chatCost = CREDIT_COST.chats;
+  const insufficient = credits.remaining < chatCost;
+
   const submit = () => {
-    if (!input.trim() || send.isPending || thinking) return;
+    if (!input.trim() || send.isPending || thinking || insufficient) return;
     const text = input;
     setInput("");
     send.mutate(text);
@@ -231,14 +235,14 @@ function ThreadPage() {
                 className="gap-2"
               >
                 <MessageSquarePlus className="h-4 w-4" />
-                All chats
+                {t("assistant.allChats")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => remove.mutate()}
                 className="gap-2 text-destructive focus:text-destructive"
               >
                 <Trash2 className="h-4 w-4" />
-                Delete chat
+                {t("assistant.deleteChat")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -269,12 +273,23 @@ function ThreadPage() {
 
         {/* Composer */}
         <div className="-mx-6 border-t border-border bg-card/95 px-4 py-3 backdrop-blur">
+          {insufficient && (
+            <div
+              role="alert"
+              className="mb-2 flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-[11px] text-destructive"
+            >
+              <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+              <span className="flex-1">{t("credits.warning")}</span>
+            </div>
+          )}
           <form
             onSubmit={(e) => {
               e.preventDefault();
               submit();
             }}
-            className="flex items-end gap-2 rounded-2xl border border-border bg-background px-3 py-2 shadow-elevation-1 focus-within:border-primary/60"
+            className={`flex items-end gap-2 rounded-2xl border bg-background px-3 py-2 shadow-elevation-1 focus-within:border-primary/60 ${
+              insufficient ? "border-destructive/40" : "border-border"
+            }`}
           >
             <textarea
               ref={inputRef}
@@ -287,15 +302,21 @@ function ThreadPage() {
                 }
               }}
               rows={1}
-              placeholder="Ask about products, stock, trends…"
-              className="max-h-40 min-h-[24px] flex-1 resize-none bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-              disabled={send.isPending || thinking}
+              placeholder={
+                insufficient
+                  ? t("credits.insufficient")
+                  : t("assistant.placeholder")
+              }
+              className="max-h-40 min-h-[24px] flex-1 resize-none bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed"
+              disabled={send.isPending || thinking || insufficient}
+              aria-invalid={insufficient}
             />
             <button
               type="submit"
-              disabled={!input.trim() || send.isPending || thinking}
-              aria-label="Send"
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground transition-all hover:scale-105 disabled:bg-secondary disabled:text-muted-foreground disabled:hover:scale-100"
+              disabled={!input.trim() || send.isPending || thinking || insufficient}
+              aria-label={t("assistant.send")}
+              title={insufficient ? t("credits.insufficient") : t("assistant.send")}
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground transition-all hover:scale-105 disabled:cursor-not-allowed disabled:bg-secondary disabled:text-muted-foreground disabled:hover:scale-100"
             >
               {send.isPending || thinking ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -304,8 +325,15 @@ function ThreadPage() {
               )}
             </button>
           </form>
-          <p className="mt-1.5 text-center text-[10px] text-muted-foreground">
-            AI responses are illustrative — verify important decisions.
+          <p className="mt-1.5 flex flex-wrap items-center justify-center gap-x-1.5 text-center text-[10px] text-muted-foreground">
+            <span className="tabular-nums">
+              {t("credits.remainingShort", {
+                n: credits.remaining.toLocaleString("en-IN"),
+                cost: chatCost,
+              })}
+            </span>
+            <span aria-hidden>·</span>
+            <span>{t("assistant.disclaimer")}</span>
           </p>
         </div>
       </div>
@@ -361,14 +389,15 @@ function TypingIndicator() {
 }
 
 function EmptyThread({ onPick }: { onPick: (prompt: string) => void }) {
+  const t = useT();
   return (
     <div className="flex h-full flex-col items-center justify-center py-8 text-center">
       <span className="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/20">
         <Sparkles className="h-6 w-6" />
       </span>
-      <h2 className="mt-4 text-lg font-bold tracking-tight">How can I help?</h2>
+      <h2 className="mt-4 text-lg font-bold tracking-tight">{t("assistant.howHelp")}</h2>
       <p className="mt-1 max-w-[18rem] text-xs text-muted-foreground">
-        Pick a suggestion or type your own question below.
+        {t("assistant.pickOrType")}
       </p>
       <div className="mt-5 grid w-full grid-cols-1 gap-2">
         {STARTER_PROMPTS.map((s) => (

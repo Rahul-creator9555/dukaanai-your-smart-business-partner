@@ -70,7 +70,7 @@ function AssistantHubPage() {
           <div className="flex items-center gap-1.5 text-primary">
             <Sparkles className="h-3.5 w-3.5" />
             <span className="text-[11px] font-semibold uppercase tracking-wide">
-              AI Assistant
+              {t("dash.aiTag")}
             </span>
           </div>
           <h1 className="mt-1 text-xl font-bold tracking-tight">{t("assistant.askAnything")}</h1>
@@ -85,13 +85,13 @@ function AssistantHubPage() {
           className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground shadow-elevation-1 transition-transform hover:scale-105 disabled:opacity-60"
         >
           <Plus className="h-3.5 w-3.5" />
-          New
+          {t("common.new")}
         </button>
       </header>
 
       {/* Starters */}
       <section className="mt-5">
-        <p className="text-xs font-medium text-muted-foreground">Try asking</p>
+        <p className="text-xs font-medium text-muted-foreground">{t("assistant.tryAsking")}</p>
         <div className="mt-2 grid grid-cols-2 gap-2">
           {STARTER_PROMPTS.map((s) => (
             <button
@@ -115,7 +115,7 @@ function AssistantHubPage() {
       {/* Recent conversations */}
       <section className="mt-6 flex-1 pb-24">
         <div className="mb-2 flex items-center justify-between">
-          <p className="text-xs font-medium text-muted-foreground">Recent chats</p>
+          <p className="text-xs font-medium text-muted-foreground">{t("assistant.recentChats")}</p>
         </div>
 
         {isLoading ? (
@@ -134,9 +134,9 @@ function AssistantHubPage() {
             <span className="grid h-12 w-12 place-items-center rounded-2xl bg-primary/10 text-primary">
               <MessageSquarePlus className="h-5 w-5" />
             </span>
-            <h3 className="mt-3 text-sm font-semibold">Start your first chat</h3>
+            <h3 className="mt-3 text-sm font-semibold">{t("assistant.startFirst")}</h3>
             <p className="mt-1 max-w-[16rem] text-xs text-muted-foreground">
-              Ask about trending SKUs, restock timing, or generate a listing.
+              {t("assistant.startFirstHint")}
             </p>
           </button>
         ) : (
