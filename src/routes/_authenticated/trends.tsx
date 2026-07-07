@@ -6,6 +6,7 @@ import { MobileShell } from "@/components/MobileShell";
 import { BottomNav } from "@/components/BottomNav";
 import { supabase } from "@/integrations/supabase/client";
 import { PRODUCT_CATEGORIES, formatCurrency } from "@/lib/products";
+import { useT } from "@/lib/i18n";
 import {
   TRENDING_PRODUCTS,
   demandTone,
