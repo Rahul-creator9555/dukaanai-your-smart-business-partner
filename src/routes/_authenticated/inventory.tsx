@@ -126,14 +126,14 @@ function InventoryPage() {
             type="button"
             onClick={() => navigate({ to: "/dashboard" })}
             className="grid h-9 w-9 place-items-center rounded-full text-foreground hover:bg-secondary"
-            aria-label="Back"
+            aria-label={t("common.back")}
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
           <div>
-            <h1 className="text-xl font-bold tracking-tight">Inventory</h1>
+            <h1 className="text-xl font-bold tracking-tight">{t("inv.title")}</h1>
             <p className="text-xs text-muted-foreground">
-              {stats.totalSkus} SKU{stats.totalSkus === 1 ? "" : "s"} · {stats.totalUnits} units
+              {t("inv.count", { sku: stats.totalSkus, units: stats.totalUnits })}
             </p>
           </div>
         </div>
@@ -142,7 +142,7 @@ function InventoryPage() {
           className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground shadow-elevation-1 transition-transform hover:scale-105"
         >
           <Plus className="h-3.5 w-3.5" />
-          Add
+          {t("common.add")}
         </Link>
       </header>
 
@@ -150,31 +150,32 @@ function InventoryPage() {
       <section className="mt-5 grid grid-cols-2 gap-3">
         <StatCard
           icon={<IndianRupee className="h-4 w-4" />}
-          label="Stock value"
+          label={t("inv.stockValue")}
           value={formatCurrency(stats.inventoryValue)}
           tone="primary"
         />
         <StatCard
           icon={<TrendingUp className="h-4 w-4" />}
-          label="Potential revenue"
+          label={t("inv.potentialRevenue")}
           value={formatCurrency(stats.potentialRevenue)}
           tone="success"
         />
         <StatCard
           icon={<AlertTriangle className="h-4 w-4" />}
-          label="Low stock"
+          label={t("inv.lowStock")}
           value={String(stats.lowCount)}
           tone="warning"
           onClick={() => setTab("low")}
         />
         <StatCard
           icon={<PackageX className="h-4 w-4" />}
-          label="Out of stock"
+          label={t("inv.outOfStock")}
           value={String(stats.outCount)}
           tone="danger"
           onClick={() => setTab("out")}
         />
       </section>
+
 
       {/* Charts */}
       {list.length > 0 && (
