@@ -253,28 +253,28 @@ function InventoryPage() {
 
       {/* Tabs */}
       <div className="mt-5 flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {TABS.map((t) => {
+        {TAB_IDS.map((id) => {
           const count =
-            t.id === "low"
+            id === "low"
               ? stats.lowCount
-              : t.id === "out"
+              : id === "out"
                 ? stats.outCount
-                : t.id === "expiring"
+                : id === "expiring"
                   ? stats.expiringCount + stats.expiredCount
                   : stats.totalSkus;
-          const active = tab === t.id;
+          const active = tab === id;
           return (
             <button
-              key={t.id}
+              key={id}
               type="button"
-              onClick={() => setTab(t.id)}
+              onClick={() => setTab(id)}
               className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
                 active
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-border bg-card text-foreground hover:bg-secondary"
               }`}
             >
-              {t.label}
+              {t(TAB_KEY[id])}
               <span
                 className={`rounded-full px-1.5 text-[10px] font-semibold ${
                   active ? "bg-primary-foreground/20" : "bg-secondary"
