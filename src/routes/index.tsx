@@ -18,12 +18,8 @@ function SplashScreen() {
 
   useEffect(() => {
     let cancelled = false;
-    const start = Date.now();
     (async () => {
       const { data } = await supabase.auth.getSession();
-      const elapsed = Date.now() - start;
-      const wait = Math.max(0, 1400 - elapsed);
-      await new Promise((r) => setTimeout(r, wait));
       if (cancelled) return;
 
       if (!data.session) {
