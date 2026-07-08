@@ -38,19 +38,20 @@ function initials(name?: string | null, fallback = "DA") {
 function Dashboard() {
   const navigate = useNavigate();
   const t = useT();
-  const [profile, setProfile] = useState<Profile | null>(null);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) return;
+  const { data: profile } = useQuery<Profile | null>({
+    queryKey: ["dashboard-profile"],
+    queryFn: async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) return null;
       const { data: p } = await supabase
         .from("profiles")
         .select("full_name, shop_name, shop_category")
         .eq("id", data.user.id)
         .maybeSingle();
-      setProfile(p ?? null);
-    });
-  }, []);
+      return (p as Profile | null) ?? null;
+    },
+    staleTime: 5 * 60_000,
+  });
 
   const greeting = () => {
     const h = new Date().getHours();
