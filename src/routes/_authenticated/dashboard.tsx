@@ -92,7 +92,7 @@ function Dashboard() {
   ];
 
   const ACTIVITY = [
-    { title: "Added 'Dove Soap 100g' to inventory", time: "2h ago", icon: PackagePlus },
+    { title: "Added 'Dove Soap 100g' to inventory", time: "2h ago", icon: Package },
     { title: "Low stock alert: Parle-G biscuits", time: "5h ago", icon: AlertTriangle },
     { title: "Trend spotted: Cold-pressed juice", time: "Yesterday", icon: TrendingUp },
   ];
