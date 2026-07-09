@@ -8,9 +8,9 @@ import {
   Boxes,
   Clock,
   Package,
-  PackagePlus,
   Plus,
   Sparkles,
+  Store,
   TrendingUp,
 } from "lucide-react";
 import { MobileShell } from "@/components/MobileShell";
@@ -85,7 +85,7 @@ function Dashboard() {
   ];
 
   const QUICK_ACTIONS = [
-    { label: t("dash.action.addProduct"), icon: PackagePlus, to: "/products/new" as const },
+    { label: "List on Shopify", icon: Store, to: "/list-product" as const },
     { label: t("dash.action.inventory"), icon: Boxes, to: "/inventory" as const },
     { label: t("dash.action.analytics"), icon: BarChart3, to: "/analytics" as const },
     { label: t("dash.action.assistant"), icon: Sparkles, to: "/assistant" as const },
