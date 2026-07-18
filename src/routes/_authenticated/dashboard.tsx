@@ -10,7 +10,6 @@ import {
   Package,
   Plus,
   Sparkles,
-  Store,
   TrendingUp,
 } from "lucide-react";
 import { MobileShell } from "@/components/MobileShell";
