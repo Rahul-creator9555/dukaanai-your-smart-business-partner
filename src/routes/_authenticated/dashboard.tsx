@@ -85,7 +85,7 @@ function Dashboard() {
   ];
 
   const QUICK_ACTIONS = [
-    { label: "List on Shopify", icon: Store, to: "/list-product" as const },
+    { label: t("dash.action.addProduct"), icon: Plus, to: "/products/new" as const },
     { label: t("dash.action.inventory"), icon: Boxes, to: "/inventory" as const },
     { label: t("dash.action.analytics"), icon: BarChart3, to: "/analytics" as const },
     { label: t("dash.action.assistant"), icon: Sparkles, to: "/assistant" as const },
