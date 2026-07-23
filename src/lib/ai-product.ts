@@ -13,6 +13,10 @@ export interface GenerateInput {
   name?: string;
   /** Optional uploaded image. */
   image?: File | null;
+  /** Optional scanned QR / barcode value (EAN, UPC, QR URL, etc.). */
+  barcode?: string | null;
+  /** Optional detected barcode format (e.g. "ean_13", "qr_code"). */
+  barcodeFormat?: string | null;
 }
 
 /**
@@ -31,18 +35,34 @@ export async function generateProductDetails(
   const fromImage = !hint && !!input.image
     ? humanizeFileName(input.image.name)
     : "";
-  const seed = hint || fromImage || "New product";
+  const fromBarcode = !hint && !fromImage && input.barcode
+    ? humanizeBarcode(input.barcode)
+    : "";
+  const seed = hint || fromImage || fromBarcode || "New product";
 
   const category = inferCategory(seed);
   const price = suggestPrice(category, seed);
+  const tags = buildTags(seed, category);
+  if (input.barcode) tags.push(`code:${input.barcode.slice(0, 20)}`);
 
   return {
     title: toTitleCase(seed),
-    description: buildDescription(seed, category),
+    description: buildDescription(seed, category, input.barcode ?? null),
     category,
-    tags: buildTags(seed, category),
+    tags: Array.from(new Set(tags)).slice(0, 8),
     suggestedPrice: price,
   };
+}
+
+function humanizeBarcode(code: string) {
+  try {
+    const u = new URL(code);
+    const seg = u.pathname.split("/").filter(Boolean).pop();
+    if (seg) return seg.replace(/[-_]+/g, " ");
+    return u.hostname.replace(/^www\./, "");
+  } catch {
+    return `Product ${code.slice(-6)}`;
+  }
 }
 
 function delay(ms: number) {
