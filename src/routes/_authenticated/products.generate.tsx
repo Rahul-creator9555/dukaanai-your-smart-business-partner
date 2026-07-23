@@ -61,6 +61,9 @@ function Generator() {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [draft, setDraft] = useState<AIGeneratedProduct | null>(null);
+  const [barcode, setBarcode] = useState<string | null>(null);
+  const [barcodeFormat, setBarcodeFormat] = useState<string | null>(null);
+  const [scannerOpen, setScannerOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const qc = useQueryClient();
