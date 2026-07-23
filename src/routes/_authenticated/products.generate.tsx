@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ArrowLeft, ImagePlus, Loader2, Sparkles, Wand2, X } from "lucide-react";
+import { ArrowLeft, ImagePlus, Loader2, ScanLine, Sparkles, Wand2, X } from "lucide-react";
 import { MobileShell } from "@/components/MobileShell";
+import { BarcodeScanner } from "@/components/BarcodeScanner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -60,6 +61,9 @@ function Generator() {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [draft, setDraft] = useState<AIGeneratedProduct | null>(null);
+  const [barcode, setBarcode] = useState<string | null>(null);
+  const [barcodeFormat, setBarcodeFormat] = useState<string | null>(null);
+  const [scannerOpen, setScannerOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -75,7 +79,8 @@ function Generator() {
   }, [file]);
 
   const generate = useMutation({
-    mutationFn: () => generateProductDetails({ name: hint, image: file }),
+    mutationFn: () =>
+      generateProductDetails({ name: hint, image: file, barcode, barcodeFormat }),
     onMutate: () => setStage("loading"),
     onSuccess: (data) => {
       setDraft(data);
@@ -149,7 +154,7 @@ function Generator() {
     );
   }
 
-  const canGenerate = hint.trim().length > 0 || !!file;
+  const canGenerate = hint.trim().length > 0 || !!file || !!barcode;
 
   return (
     <div className="mt-6 space-y-6 pb-10">
@@ -162,10 +167,52 @@ function Generator() {
           Create a listing in seconds
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Upload a product photo or type a name. AI will draft the title,
+          Scan a QR / barcode, upload a photo, or type a name. AI will draft the title,
           description, category, tags, and a suggested price.
         </p>
       </div>
+
+      <section className="space-y-2">
+        <Label className="text-xs font-medium text-muted-foreground">Scan product code</Label>
+        {barcode ? (
+          <div className="flex items-center gap-3 rounded-3xl border border-primary/30 bg-primary/5 p-4">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/15 text-primary">
+              <ScanLine className="h-5 w-5" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-medium text-muted-foreground">
+                {barcodeFormat ? barcodeFormat.replace(/_/g, " ").toUpperCase() : "Scanned code"}
+              </p>
+              <p className="truncate text-sm font-semibold text-foreground">{barcode}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setBarcode(null);
+                setBarcodeFormat(null);
+              }}
+              className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground hover:bg-secondary"
+              aria-label="Clear scanned code"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setScannerOpen(true)}
+            className="flex w-full items-center gap-3 rounded-3xl border-2 border-dashed border-border bg-card p-4 text-left text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-foreground"
+          >
+            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-primary/10 text-primary">
+              <ScanLine className="h-5 w-5" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-foreground">Scan QR or barcode</p>
+              <p className="text-xs">AI uses the code to identify the product</p>
+            </div>
+          </button>
+        )}
+      </section>
 
       <section className="space-y-2">
         <Label className="text-xs font-medium text-muted-foreground">Product image</Label>
@@ -235,6 +282,17 @@ function Generator() {
         <Wand2 className="h-4 w-4" />
         Generate with AI
       </Button>
+
+      <BarcodeScanner
+        open={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        onDetected={(value, format) => {
+          setBarcode(value);
+          setBarcodeFormat(format ?? null);
+          setScannerOpen(false);
+          toast.success("Code scanned");
+        }}
+      />
     </div>
   );
 }
