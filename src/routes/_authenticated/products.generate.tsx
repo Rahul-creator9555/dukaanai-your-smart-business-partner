@@ -79,7 +79,8 @@ function Generator() {
   }, [file]);
 
   const generate = useMutation({
-    mutationFn: () => generateProductDetails({ name: hint, image: file }),
+    mutationFn: () =>
+      generateProductDetails({ name: hint, image: file, barcode, barcodeFormat }),
     onMutate: () => setStage("loading"),
     onSuccess: (data) => {
       setDraft(data);
