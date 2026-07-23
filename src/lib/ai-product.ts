@@ -127,7 +127,7 @@ function hash(s: string) {
   return h;
 }
 
-function buildDescription(seed: string, category: ProductCategory) {
+function buildDescription(seed: string, category: ProductCategory, barcode: string | null = null) {
   const title = toTitleCase(seed);
   const blurbs: Record<ProductCategory, string> = {
     Medical: `${title} — trusted everyday care for your customers. Store in a cool, dry place.`,
@@ -139,7 +139,8 @@ function buildDescription(seed: string, category: ProductCategory) {
     Stationery: `${title} — smooth, dependable quality for school and office.`,
     Other: `${title} — a great addition to your shop's catalogue.`,
   };
-  return blurbs[category];
+  const base = blurbs[category];
+  return barcode ? `${base} Scanned code: ${barcode}.` : base;
 }
 
 function buildTags(seed: string, category: ProductCategory): string[] {
