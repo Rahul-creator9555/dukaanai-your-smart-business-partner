@@ -123,20 +123,38 @@ export function BarcodeScanner({ open, onClose, onDetected }: Props) {
           </div>
         )}
 
-        {status === "unsupported" && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/80 px-6 text-center text-sm">
-            <p className="font-semibold">Scanner not supported</p>
-            <p className="text-white/70">
-              Your browser doesn't support barcode scanning. Try Chrome on Android, or type the
-              product name instead.
+        {(status === "unsupported" || status === "error") && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/85 px-6 text-center text-sm">
+            <p className="font-semibold">
+              {status === "unsupported" ? "Scanner not supported here" : "Camera unavailable"}
             </p>
-          </div>
-        )}
-
-        {status === "error" && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/80 px-6 text-center text-sm">
-            <p className="font-semibold">Camera unavailable</p>
-            <p className="text-white/70">{errorMsg}</p>
+            <p className="text-white/70">
+              {status === "unsupported"
+                ? "This browser can't read codes with the camera. Enter the code below instead."
+                : errorMsg || "Allow camera access, or enter the code below."}
+            </p>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const v = manual.trim();
+                if (v) onDetected(v, "manual");
+              }}
+              className="mt-2 flex w-full max-w-xs gap-2"
+            >
+              <input
+                value={manual}
+                onChange={(e) => setManual(e.target.value)}
+                placeholder="Enter barcode / code"
+                aria-label="Enter product code"
+                className="h-12 flex-1 rounded-2xl bg-white/10 px-4 text-sm text-white placeholder:text-white/50 outline-none focus:bg-white/15"
+              />
+              <button
+                type="submit"
+                className="h-12 rounded-2xl bg-primary px-4 text-sm font-semibold text-primary-foreground"
+              >
+                Use
+              </button>
+            </form>
           </div>
         )}
 
