@@ -20,6 +20,7 @@ export function BarcodeScanner({ open, onClose, onDetected }: Props) {
     "idle",
   );
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const [manual, setManual] = useState("");
 
   useEffect(() => {
     if (!open) return;
