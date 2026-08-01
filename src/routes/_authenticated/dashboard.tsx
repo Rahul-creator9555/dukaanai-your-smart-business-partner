@@ -9,6 +9,7 @@ import {
   Clock,
   Package,
   Plus,
+  ScanLine,
   Sparkles,
   TrendingUp,
 } from "lucide-react";
@@ -84,6 +85,7 @@ function Dashboard() {
   ];
 
   const QUICK_ACTIONS = [
+    { label: "Scan code", icon: ScanLine, to: "/scan" as const },
     { label: t("dash.action.addProduct"), icon: Plus, to: "/products/new" as const },
     { label: t("dash.action.inventory"), icon: Boxes, to: "/inventory" as const },
     { label: t("dash.action.analytics"), icon: BarChart3, to: "/analytics" as const },
@@ -191,7 +193,7 @@ function Dashboard() {
       {/* Quick actions */}
       <section className="mt-6">
         <SectionTitle>{t("dash.quickActions")}</SectionTitle>
-        <div className="mt-3 grid grid-cols-4 gap-3">
+        <div className="mt-3 grid grid-cols-5 gap-2">
           {QUICK_ACTIONS.map((a) => (
             <button
               key={a.label}
@@ -245,11 +247,11 @@ function Dashboard() {
       {/* Floating add */}
       <button
         type="button"
-        onClick={() => navigate({ to: "/products/new" })}
-        aria-label="Add product"
+        onClick={() => navigate({ to: "/scan" })}
+        aria-label="Scan product code"
         className="fixed bottom-24 right-[max(1.25rem,calc(50vw-13rem))] z-30 grid h-14 w-14 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-elevation-3 transition-transform hover:scale-105 active:scale-95 sm:bottom-28"
       >
-        <Plus className="h-6 w-6" strokeWidth={2.6} />
+        <ScanLine className="h-6 w-6" strokeWidth={2.6} />
       </button>
 
       <BottomNav />
