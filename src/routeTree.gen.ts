@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedTrendsRouteImport } from './routes/_authenticated/trends'
+import { Route as AuthenticatedScanRouteImport } from './routes/_authenticated/scan'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedInventoryRouteImport } from './routes/_authenticated/inventory'
@@ -54,6 +55,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthenticatedTrendsRoute = AuthenticatedTrendsRouteImport.update({
   id: '/trends',
   path: '/trends',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedScanRoute = AuthenticatedScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/inventory': typeof AuthenticatedInventoryRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/scan': typeof AuthenticatedScanRoute
   '/trends': typeof AuthenticatedTrendsRoute
   '/assistant/$threadId': typeof AuthenticatedAssistantThreadIdRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRouteWithChildren
@@ -146,6 +153,7 @@ export interface FileRoutesByTo {
   '/inventory': typeof AuthenticatedInventoryRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/scan': typeof AuthenticatedScanRoute
   '/trends': typeof AuthenticatedTrendsRoute
   '/assistant/$threadId': typeof AuthenticatedAssistantThreadIdRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRouteWithChildren
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/_authenticated/inventory': typeof AuthenticatedInventoryRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/scan': typeof AuthenticatedScanRoute
   '/_authenticated/trends': typeof AuthenticatedTrendsRoute
   '/_authenticated/assistant/$threadId': typeof AuthenticatedAssistantThreadIdRoute
   '/_authenticated/products/$productId': typeof AuthenticatedProductsProductIdRouteWithChildren
@@ -186,6 +195,7 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/onboarding'
     | '/profile'
+    | '/scan'
     | '/trends'
     | '/assistant/$threadId'
     | '/products/$productId'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/onboarding'
     | '/profile'
+    | '/scan'
     | '/trends'
     | '/assistant/$threadId'
     | '/products/$productId'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/_authenticated/inventory'
     | '/_authenticated/onboarding'
     | '/_authenticated/profile'
+    | '/_authenticated/scan'
     | '/_authenticated/trends'
     | '/_authenticated/assistant/$threadId'
     | '/_authenticated/products/$productId'
@@ -281,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/trends'
       fullPath: '/trends'
       preLoaderRoute: typeof AuthenticatedTrendsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/scan': {
+      id: '/_authenticated/scan'
+      path: '/scan'
+      fullPath: '/scan'
+      preLoaderRoute: typeof AuthenticatedScanRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/profile': {
@@ -399,6 +418,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedInventoryRoute: typeof AuthenticatedInventoryRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedScanRoute: typeof AuthenticatedScanRoute
   AuthenticatedTrendsRoute: typeof AuthenticatedTrendsRoute
   AuthenticatedProductsProductIdRoute: typeof AuthenticatedProductsProductIdRouteWithChildren
   AuthenticatedProductsGenerateRoute: typeof AuthenticatedProductsGenerateRoute
@@ -412,6 +432,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedInventoryRoute: AuthenticatedInventoryRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedScanRoute: AuthenticatedScanRoute,
   AuthenticatedTrendsRoute: AuthenticatedTrendsRoute,
   AuthenticatedProductsProductIdRoute:
     AuthenticatedProductsProductIdRouteWithChildren,
