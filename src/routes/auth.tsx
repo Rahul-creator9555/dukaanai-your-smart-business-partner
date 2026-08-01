@@ -88,7 +88,12 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email: e1.data, password: e2.data });
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      if (error.message.toLowerCase().includes("invalid login")) {
+        return toast.error("Wrong email or password. New here? Use \"Create account\".");
+      }
+      return toast.error(error.message);
+    }
     toast.success("Signed in");
     onSuccess();
   };
@@ -155,8 +160,14 @@ function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
     setLoading(false);
     if (error) return toast.error(error.message);
     if (!data.session) {
-      toast.success("Check your email to confirm your account.");
-      return;
+      const retry = await supabase.auth.signInWithPassword({
+        email: e1.data,
+        password: e2.data,
+      });
+      if (retry.error) {
+        toast.success("Account created. Please sign in.");
+        return;
+      }
     }
     toast.success("Welcome to DukaanAI");
     onSuccess();
