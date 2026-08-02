@@ -78,7 +78,9 @@ export function BarcodeScanner({ open, onClose, onDetected }: Props) {
           } catch {
             return null;
           }
-        };
+        captureRef.current = () => (videoRef.current ? grabFrame(videoRef.current) : null);
+
+
 
         const tick = async () => {
           if (cancelled || !videoRef.current) return;
