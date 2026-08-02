@@ -61,12 +61,31 @@ export function BarcodeScanner({ open, onClose, onDetected }: Props) {
         await video.play();
         setStatus("ready");
 
+        const grabFrame = (video: HTMLVideoElement): string | null => {
+          try {
+            const w = video.videoWidth;
+            const h = video.videoHeight;
+            if (!w || !h) return null;
+            const scale = Math.min(1, 900 / Math.max(w, h));
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.round(w * scale);
+            canvas.height = Math.round(h * scale);
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return null;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            return canvas.toDataURL("image/jpeg", 0.8);
+          } catch {
+            return null;
+          }
+        };
+
         const tick = async () => {
           if (cancelled || !videoRef.current) return;
           try {
             const codes = await detector.detect(videoRef.current);
             if (codes && codes.length > 0) {
-              onDetected(codes[0].rawValue, codes[0].format);
+              const shot = grabFrame(videoRef.current);
+              onDetected(codes[0].rawValue, codes[0].format, shot);
               return;
             }
           } catch {
