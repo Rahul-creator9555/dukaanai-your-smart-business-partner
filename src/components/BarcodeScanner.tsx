@@ -16,6 +16,7 @@ type BarcodeDetectorCtor = new (opts?: { formats?: string[] }) => BarcodeDetecto
 
 export function BarcodeScanner({ open, onClose, onDetected }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const captureRef = useRef<(() => string | null) | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "ready" | "unsupported" | "error">(
     "idle",
   );
