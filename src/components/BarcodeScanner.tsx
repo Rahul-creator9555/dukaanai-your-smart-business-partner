@@ -4,7 +4,7 @@ import { Loader2, ScanLine, X } from "lucide-react";
 type Props = {
   open: boolean;
   onClose: () => void;
-  onDetected: (value: string, format?: string) => void;
+  onDetected: (value: string, format?: string, imageDataUrl?: string | null) => void;
 };
 
 // Minimal BarcodeDetector typing (not in lib.dom yet)
