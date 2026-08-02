@@ -192,9 +192,16 @@ export function BarcodeScanner({ open, onClose, onDetected }: Props) {
                 <span className="absolute left-0 right-0 top-1/2 h-0.5 animate-pulse bg-primary" />
               </div>
             </div>
-            <p className="absolute bottom-6 left-0 right-0 text-center text-xs text-white/80">
-              Align the code inside the frame
-            </p>
+            <div className="absolute bottom-6 left-0 right-0 flex flex-col items-center gap-3 px-6">
+              <p className="text-center text-xs text-white/80">Align the code inside the frame</p>
+              <button
+                type="button"
+                onClick={() => onDetected("", "photo", captureRef.current?.() ?? null)}
+                className="h-12 rounded-2xl bg-white/15 px-5 text-sm font-semibold text-white backdrop-blur hover:bg-white/25"
+              >
+                No barcode? Use photo
+              </button>
+            </div>
           </>
         )}
       </div>
